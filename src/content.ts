@@ -45,9 +45,9 @@ export const copy = {
     },
     hero: {
       kicker: "Metallbau aus Seeheim",
-      title: "Sonderanfertigungen aus Metall und Holz.",
+      title: "Metall & Holz nach Mass.",
       text:
-        "Moebel, Tore, Treppen, Balkone, Reparaturen und technische Planung aus einer Hand - praezise gefertigt, sauber montiert und persoenlich abgestimmt.",
+        "Sonderanfertigungen fuer Moebel, Tore, Treppen, Balkone, Reparaturen und technische Planung - praezise gefertigt, sauber montiert und persoenlich abgestimmt.",
       primary: "Projekt anfragen",
       secondary: "Arbeiten ansehen",
       stats: ["Metall & Holz", "CAD-Planung", "Innen & Aussen"],
@@ -113,7 +113,7 @@ export const copy = {
     },
     hero: {
       kicker: "Metalwork from Seeheim",
-      title: "Custom work in metal and wood.",
+      title: "Custom metal and woodwork.",
       text:
         "Furniture, gates, stairs, balconies, repairs and technical planning from one place - precisely made, cleanly installed and personally coordinated.",
       primary: "Start a request",

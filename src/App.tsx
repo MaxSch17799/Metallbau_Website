@@ -157,6 +157,10 @@ function Header({
 function HomePage({ lang, navigate }: { lang: Lang; navigate: (path: string) => void }) {
   const t = copy[lang];
   const featured = projects.slice(0, 4);
+  const materials =
+    lang === "de"
+      ? ["Stahl", "Holz", "Gelaender", "Moebel", "CAD", "Reparatur", "Montage"]
+      : ["Steel", "Wood", "Railings", "Furniture", "CAD", "Repair", "Installation"];
 
   return (
     <>
@@ -175,19 +179,42 @@ function HomePage({ lang, navigate }: { lang: Lang; navigate: (path: string) => 
               <ArrowRight size={18} />
             </button>
           </div>
-          <div className="hero-stats">
+          <div className="hero-stats" aria-label="Schwerpunkte">
             {t.hero.stats.map((item) => (
-              <span key={item}>{item}</span>
+              <span key={item}>
+                <strong>{item}</strong>
+                <small>{lang === "de" ? "nach Mass" : "made to fit"}</small>
+              </span>
             ))}
           </div>
         </div>
-        <div className="hero-media">
-          <img src="/projects/balkon-gelaender.webp" alt="" />
+        <div className="hero-stage">
+          <div className="hero-media">
+            <img src="/projects/balkon-gelaender.webp" alt="" />
+          </div>
+          <div className="hero-inset hero-inset-top">
+            <img src="/projects/metall-holz-tisch.webp" alt="" />
+          </div>
+          <div className="hero-inset hero-inset-bottom">
+            <img src="/projects/leuchtobjekt.webp" alt="" />
+          </div>
           <div className="hero-note">
             <span>01</span>
             <strong>{lang === "de" ? "Aussenanlagen und Gelaender" : "Exterior structures and railings"}</strong>
           </div>
+          <div className="technical-plate" aria-hidden="true">
+            <span>CAD</span>
+            <i />
+            <b>R 02</b>
+            <small>1:20</small>
+          </div>
         </div>
+      </section>
+
+      <section className="material-ribbon" aria-label="Materialien und Schwerpunkte">
+        {materials.map((item) => (
+          <span key={item}>{item}</span>
+        ))}
       </section>
 
       <section className="proof-strip" aria-label="Highlights">
@@ -202,14 +229,15 @@ function HomePage({ lang, navigate }: { lang: Lang; navigate: (path: string) => 
         })}
       </section>
 
-      <section className="section-band">
+      <section className="section-band capabilities-band">
         <SectionIntro title={t.sections.services} text={t.sections.servicesText} />
         <div className="service-grid">
-          {services.map((service) => {
+          {services.map((service, index) => {
             const Icon = service.icon;
             const [title, text] = service[lang];
             return (
               <article className="service-card" key={title}>
+                <span className="service-number">{String(index + 1).padStart(2, "0")}</span>
                 <Icon size={22} />
                 <h3>{title}</h3>
                 <p>{text}</p>
@@ -220,8 +248,16 @@ function HomePage({ lang, navigate }: { lang: Lang; navigate: (path: string) => 
       </section>
 
       <section className="split-section">
-        <div>
-          <SectionIntro title={t.sections.featured} text={lang === "de" ? "Ein erster Querschnitt der aktuellen Bildauswahl." : "A first cross-section from the current image selection."} />
+        <div className="sticky-intro">
+          <SectionIntro
+            title={t.sections.featured}
+            text={lang === "de" ? "Echte Arbeiten statt generischer Stockbilder." : "Real work instead of generic stock imagery."}
+          />
+          <p>
+            {lang === "de"
+              ? "Die aktuelle Galerie nutzt Ihre erste Bildauswahl. Mit besseren finalen Fotos wird die Seite sofort hochwertiger wirken."
+              : "The current gallery uses your first image selection. Better final photos will immediately make the site feel more premium."}
+          </p>
         </div>
         <div className="featured-grid">
           {featured.map((project) => (
