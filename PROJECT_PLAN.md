@@ -156,6 +156,33 @@ If you want less personal-name branding:
 - `Metallwerk Seeheim`
 - `Seeheimer Metallbau & Design`
 
+Updated naming shortlist after choosing the fancy modern direction:
+
+1. `Schimmel Metallbau & Design`
+   - Best balanced option. Clear for SEO, personal enough for trust, broad enough for furniture, outdoor work, and design.
+2. `Schimmel Metallwerk`
+   - Shorter, more modern, still tied to metalwork.
+3. `Metallwerk Seeheim`
+   - Strong if you want less personal-name branding and a local identity.
+4. `Schimmel Metall & Holz`
+   - Very clear for the furniture/interior direction, but slightly narrower for gates/stairs/balconies.
+5. `Schimmel Metalltechnik & Design`
+   - Good if the engineering/CAD/prototyping side should be visible.
+6. `Maximilian Schimmel Metallbau`
+   - Most direct and legally straightforward, but less brand-like.
+7. `Seeheimer Metallbau & Design`
+   - Local and SEO-friendly, less personal.
+8. `Schimmel Werkstatt fuer Metall & Holz`
+   - Personal craft feel, but a bit longer and more workshop-like.
+9. `MS Metallbau & Design`
+   - Clean and compact, but less SEO-clear and less memorable.
+10. `Schimmel Objektbau`
+    - Stylish, but too vague unless paired with a clear subtitle such as `Metall, Holz und Sonderanfertigungen`.
+
+Selected provisional website name:
+
+- `Metallbau Schimmel`
+
 ## Public Email Setup Recommendation
 
 V1 decision:
@@ -424,6 +451,10 @@ Current preference:
   - Minimalist architectural precision.
   - Fancy modern architectural/local hybrid.
   - Very clear practical local expert.
+- Selected direction after follow-up mockups:
+  - Fancy modern architectural/local hybrid.
+  - The preferred mockup is the one with the headline direction `Sonderanfertigungen aus Metall und Holz`.
+  - Desktop and mobile should share the same premium but usable structure.
 - Do not pursue direction 2 "Warm Workshop Craft" as the main direction.
 - Do not pursue direction 4 "Industrial Editorial" as the main direction.
 
@@ -467,6 +498,17 @@ Image work still needed:
 - Rename them with SEO-friendly names.
 - Add captions and categories.
 - Decide which images should be used as hero candidates.
+
+Image placeholders that still need final source material:
+
+- Logo or wordmark, if wanted.
+- Portrait of Maximilian Schimmel for the About page.
+- A strong workshop/action photo with you working, if available.
+- Better finished interior furniture shots staged cleanly in daylight.
+- More finished exterior project photos from straight, less cluttered angles.
+- Close-up weld/material/detail shots for premium texture.
+- Before/after pairs, if available.
+- Any CAD drawing or technical drawing screenshots that can be public.
 
 ## Content Needed From You
 
