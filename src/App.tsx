@@ -16,10 +16,10 @@ import {
   Upload,
   X,
 } from "lucide-react";
-import { FormEvent, useEffect, useMemo, useState } from "react";
-import { brand, copy, Lang, missingImageSlots, projects, proofPoints, routes, services, serviceTiles } from "./content";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import { brand, copy, Lang, missingImageSlots, projects, proofPoints, routes, services, serviceShowcases } from "./content";
 
-type PageKey = "home" | "projects" | "request" | "about" | "ideas" | "legal" | "privacy";
+type PageKey = "home" | "projects" | "serviceDetail" | "projectDetail" | "request" | "about" | "ideas" | "legal" | "privacy";
 
 const pathToPage: Record<string, PageKey> = {
   [routes.home]: "home",
@@ -31,6 +31,16 @@ const pathToPage: Record<string, PageKey> = {
   [routes.legal]: "legal",
   [routes.privacy]: "privacy",
 };
+
+const getPageFromPath = (path: string): PageKey => {
+  if (path.startsWith(`${routes.services}/`)) return "serviceDetail";
+  if (path.startsWith(`${routes.projects}/`) && path !== routes.projects) return "projectDetail";
+  return pathToPage[path] ?? "home";
+};
+
+const getSlugFromPath = (path: string) => decodeURIComponent(path.split("/").filter(Boolean).at(-1) ?? "");
+const servicePath = (slug: string) => `${routes.services}/${slug}`;
+const projectPath = (slug: string) => `${routes.projects}/${slug}`;
 
 const projectTypes = [
   "Metall- und Holzmöbel",
@@ -46,7 +56,8 @@ export function App() {
     const stored = window.localStorage.getItem("lang");
     return stored === "en" ? "en" : "de";
   });
-  const [page, setPage] = useState<PageKey>(() => pathToPage[window.location.pathname] ?? "home");
+  const [page, setPage] = useState<PageKey>(() => getPageFromPath(window.location.pathname));
+  const [slug, setSlug] = useState(() => getSlugFromPath(window.location.pathname));
   const t = copy[lang];
 
   useEffect(() => {
@@ -55,14 +66,18 @@ export function App() {
   }, [lang]);
 
   useEffect(() => {
-    const onPop = () => setPage(pathToPage[window.location.pathname] ?? "home");
+    const onPop = () => {
+      setPage(getPageFromPath(window.location.pathname));
+      setSlug(getSlugFromPath(window.location.pathname));
+    };
     window.addEventListener("popstate", onPop);
     return () => window.removeEventListener("popstate", onPop);
   }, []);
 
   const navigate = (path: string, targetId?: string) => {
     window.history.pushState({}, "", path);
-    setPage(pathToPage[path] ?? "home");
+    setPage(getPageFromPath(path));
+    setSlug(getSlugFromPath(path));
     if (targetId) {
       window.setTimeout(() => document.getElementById(targetId)?.scrollIntoView({ behavior: "smooth" }), 40);
     } else {
@@ -76,6 +91,8 @@ export function App() {
       <main>
         {page === "home" && <HomePage lang={lang} navigate={navigate} />}
         {page === "projects" && <ProjectsPage lang={lang} navigate={navigate} />}
+        {page === "serviceDetail" && <ServiceDetailPage lang={lang} navigate={navigate} slug={slug} />}
+        {page === "projectDetail" && <ProjectDetailPage lang={lang} navigate={navigate} slug={slug} />}
         {page === "request" && <RequestPage lang={lang} />}
         {page === "about" && <AboutPage lang={lang} navigate={navigate} />}
         {page === "ideas" && <IdeasPage lang={lang} />}
@@ -175,10 +192,8 @@ function Header({
   );
 }
 
-function HomePage({ lang, navigate }: { lang: Lang; navigate: (path: string) => void }) {
+function HomePage({ lang, navigate }: { lang: Lang; navigate: (path: string, targetId?: string) => void }) {
   const t = copy[lang];
-  const featured = projects.slice(0, 4);
-  const mobileFeatured = [projects[2], projects[3], projects[5], projects[0]];
 
   return (
     <>
@@ -222,16 +237,19 @@ function HomePage({ lang, navigate }: { lang: Lang; navigate: (path: string) => 
         </div>
       </section>
 
-      <section className="service-image-strip" aria-label={t.sections.services}>
-        {serviceTiles.map((tile) => (
-          <article className={tile.generated ? "generated-tile" : undefined} key={tile.de}>
-            <img src={tile.image} alt="" />
-            <span>{tile[lang]}</span>
-          </article>
-        ))}
+      <section className="showcase-section service-showcase-section" id="leistungen">
+        <div className="showcase-heading">
+          <SectionIntro title={t.sections.services} text={t.sections.servicesText} />
+        </div>
+        <SmoothScroller
+          items={serviceShowcases}
+          lang={lang}
+          onSelect={(item) => navigate(servicePath(item.slug))}
+          variant="services"
+        />
       </section>
 
-      <section className="proof-strip" id="leistungen" aria-label="Highlights">
+      <section className="proof-strip" aria-label="Highlights">
         {proofPoints.map((item) => {
           const Icon = item.icon;
           return (
@@ -243,37 +261,8 @@ function HomePage({ lang, navigate }: { lang: Lang; navigate: (path: string) => 
         })}
       </section>
 
-      <section className="mobile-project-preview" aria-label={t.sections.featured}>
-        <div className="mobile-section-head">
-          <h2>{t.nav.projects}</h2>
-          <button onClick={() => navigate(routes.projects)}>
-            {lang === "de" ? "Alle ansehen" : "View all"}
-            <ArrowRight size={15} />
-          </button>
-        </div>
-        <div className="mobile-project-track">
-          {mobileFeatured.map((project) => (
-            <ProjectCard key={`mobile-${project.image}`} project={project} lang={lang} />
-          ))}
-        </div>
-        <div className="mobile-slider-dots" aria-hidden="true">
-          <span />
-          <span />
-          <span />
-        </div>
-      </section>
-
-      <section className="mobile-request-split">
-        <div>
-          <PenIcon />
-          <h2>{lang === "de" ? "Ihr Projekt. Unsere Lösung." : "Your project. A practical solution."}</h2>
-          <p>{lang === "de" ? "Ob Idee oder konkreter Plan - wir beraten Sie ehrlich und kompetent." : "Whether it is a rough idea or a concrete plan, we can discuss the next step."}</p>
-        </div>
-        <img src="/projects/metall-holz-tisch.webp" alt="" />
-      </section>
-
       <section className="section-band capabilities-band">
-        <SectionIntro title={t.sections.services} text={t.sections.servicesText} />
+        <SectionIntro title={t.sections.services} text={lang === "de" ? "Überblick über Leistungen und Schwerpunkte." : "Overview of services and focus areas."} />
         <div className="service-grid">
           {services.map((service, index) => {
             const Icon = service.icon;
@@ -290,6 +279,31 @@ function HomePage({ lang, navigate }: { lang: Lang; navigate: (path: string) => 
         </div>
       </section>
 
+      <section className="showcase-section project-showcase-section" id="projekte-home">
+        <div className="showcase-heading with-action">
+          <SectionIntro title={t.nav.projects} text={lang === "de" ? "Ausgewählte Arbeiten und aktuelle Bildauswahl." : "Selected work and current image selection."} />
+          <button className="outline-btn" onClick={() => navigate(routes.projects)}>
+            {lang === "de" ? "Projektseite öffnen" : "Open projects page"}
+            <ArrowRight size={16} />
+          </button>
+        </div>
+        <SmoothScroller
+          items={projects}
+          lang={lang}
+          onSelect={(item) => navigate(projectPath(item.slug))}
+          variant="projects"
+        />
+      </section>
+
+      <section className="mobile-request-split">
+        <div>
+          <PenIcon />
+          <h2>{lang === "de" ? "Ihr Projekt. Unsere Lösung." : "Your project. A practical solution."}</h2>
+          <p>{lang === "de" ? "Ob Idee oder konkreter Plan - wir beraten Sie ehrlich und kompetent." : "Whether it is a rough idea or a concrete plan, we can discuss the next step."}</p>
+        </div>
+        <img src="/projects/metall-holz-tisch.webp" alt="" />
+      </section>
+
       <section className="planning-section" id="planung-cad">
         <div className="planning-copy">
           <span className="eyebrow">{t.sections.planning}</span>
@@ -303,31 +317,6 @@ function HomePage({ lang, navigate }: { lang: Lang; navigate: (path: string) => 
         <div className="planning-media">
           <img src="/generated/cad-railing-placeholder.webp" alt="" />
           <img src="/generated/embedded-prototype-placeholder.webp" alt="" />
-        </div>
-      </section>
-
-      <section className="split-section">
-        <div className="sticky-intro">
-          <SectionIntro
-            title={t.sections.featured}
-            text={lang === "de" ? "Echte Arbeiten statt generischer Stockbilder." : "Real work instead of generic stock imagery."}
-          />
-          <p>
-            {lang === "de"
-              ? "Die aktuelle Galerie nutzt Ihre erste Bildauswahl. Mit besseren finalen Fotos wird die Seite sofort hochwertiger wirken."
-              : "The current gallery uses your first image selection. Better final photos will immediately make the site feel more premium."}
-          </p>
-        </div>
-        <div className="featured-grid">
-          {featured.map((project) => (
-            <ProjectCard key={project.image} project={project} lang={lang} />
-          ))}
-        </div>
-        <div className="section-action">
-          <button className="outline-btn" onClick={() => navigate(routes.projects)}>
-            {t.nav.projects}
-            <ArrowRight size={16} />
-          </button>
         </div>
       </section>
 
@@ -374,12 +363,102 @@ function HomePage({ lang, navigate }: { lang: Lang; navigate: (path: string) => 
   );
 }
 
+type SmoothItem = (typeof serviceShowcases)[number] | (typeof projects)[number];
+
+function SmoothScroller<T extends SmoothItem>({
+  items,
+  lang,
+  onSelect,
+  variant,
+}: {
+  items: T[];
+  lang: Lang;
+  onSelect: (item: T) => void;
+  variant: "services" | "projects";
+}) {
+  const trackRef = useRef<HTMLDivElement>(null);
+  const targetSpeed = useRef(34);
+  const currentSpeed = useRef(34);
+  const position = useRef(0);
+  const frame = useRef<number | null>(null);
+  const lastTime = useRef<number | null>(null);
+  const repeated = useMemo(() => [...items, ...items, ...items], [items]);
+
+  useEffect(() => {
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion) return;
+
+    const tick = (time: number) => {
+      const track = trackRef.current;
+      if (!track) return;
+
+      const delta = lastTime.current === null ? 0 : Math.min((time - lastTime.current) / 1000, 0.05);
+      lastTime.current = time;
+
+      currentSpeed.current += (targetSpeed.current - currentSpeed.current) * 0.055;
+      position.current -= currentSpeed.current * delta;
+
+      const loopWidth = track.scrollWidth / 3;
+      if (loopWidth > 0 && Math.abs(position.current) >= loopWidth) {
+        position.current += loopWidth;
+      }
+
+      track.style.transform = `translate3d(${position.current}px, 0, 0)`;
+      frame.current = window.requestAnimationFrame(tick);
+    };
+
+    frame.current = window.requestAnimationFrame(tick);
+    return () => {
+      if (frame.current !== null) window.cancelAnimationFrame(frame.current);
+    };
+  }, []);
+
+  const slow = () => {
+    targetSpeed.current = 0;
+  };
+
+  const resume = () => {
+    targetSpeed.current = variant === "services" ? 34 : 28;
+  };
+
+  return (
+    <div className={`smooth-scroller ${variant}`} onPointerEnter={slow} onPointerLeave={resume} onFocusCapture={slow} onBlurCapture={resume}>
+      <div className="scroller-viewport">
+        <div className="scroller-track" ref={trackRef}>
+          {repeated.map((item, index) => (
+            <button className="showcase-card" key={`${item.slug}-${index}`} onClick={() => onSelect(item)}>
+              <img src={item.image} alt="" />
+              <span>{("category" in item ? item.category[lang] : variant === "services" ? copy[lang].sections.services : copy[lang].sections.projects) as string}</span>
+              <strong>{item.title[lang]}</strong>
+              <p>{("short" in item ? item.short[lang] : item.text[lang]) as string}</p>
+              {"generated" in item && item.generated && <em>{lang === "de" ? "Platzhalter" : "Placeholder"}</em>}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function FloatingRequestPanel({ lang, navigate }: { lang: Lang; navigate: (path: string) => void }) {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
+  const [settled, setSettled] = useState(false);
+
+  useEffect(() => {
+    const target = document.querySelector(".request-band");
+    if (!target) return;
+
+    const observer = new IntersectionObserver(([entry]) => setSettled(entry.isIntersecting), {
+      rootMargin: "0px 0px -18% 0px",
+      threshold: 0.18,
+    });
+    observer.observe(target);
+    return () => observer.disconnect();
+  }, []);
 
   if (!open) {
     return (
-      <button className="floating-request-tab" onClick={() => setOpen(true)} aria-label={lang === "de" ? "Anfrage öffnen" : "Open request panel"}>
+      <button className={settled ? "floating-request-tab is-settled" : "floating-request-tab"} onClick={() => setOpen(true)} aria-label={lang === "de" ? "Anfrage öffnen" : "Open request panel"}>
         <Maximize2 size={16} />
         <span>{lang === "de" ? "Anfrage" : "Request"}</span>
       </button>
@@ -387,7 +466,7 @@ function FloatingRequestPanel({ lang, navigate }: { lang: Lang; navigate: (path:
   }
 
   return (
-    <aside className="floating-request-panel" aria-label={lang === "de" ? "Schnellanfrage" : "Quick request"}>
+    <aside className={settled ? "floating-request-panel is-open is-settled" : "floating-request-panel is-open"} aria-label={lang === "de" ? "Schnellanfrage" : "Quick request"}>
       <div className="floating-request-title">
         <strong>{lang === "de" ? "Ihr Projekt. Unsere Lösung." : "Your project. A practical solution."}</strong>
         <button onClick={() => setOpen(false)} aria-label={lang === "de" ? "Minimieren" : "Minimize"}>
@@ -457,7 +536,7 @@ function ProjectsPage({ lang, navigate }: { lang: Lang; navigate: (path: string)
       />
       <div className="project-grid">
         {projects.map((project) => (
-          <ProjectCard key={project.image} project={project} lang={lang} />
+          <ProjectCard key={project.image} project={project} lang={lang} onClick={() => navigate(projectPath(project.slug))} />
         ))}
       </div>
       <MissingImages lang={lang} />
@@ -466,6 +545,94 @@ function ProjectsPage({ lang, navigate }: { lang: Lang; navigate: (path: string)
           {t.hero.primary}
           <Send size={18} />
         </button>
+      </div>
+    </section>
+  );
+}
+
+function ServiceDetailPage({ lang, navigate, slug }: { lang: Lang; navigate: (path: string, targetId?: string) => void; slug: string }) {
+  const service = serviceShowcases.find((item) => item.slug === slug);
+
+  if (!service) {
+    return <SimplePage title={lang === "de" ? "Leistung nicht gefunden" : "Service not found"} text={lang === "de" ? "Diese Leistung ist noch nicht angelegt." : "This service has not been added yet."} />;
+  }
+
+  const Icon = service.icon;
+
+  return (
+    <section className="page-shell detail-page">
+      <div className="detail-hero">
+        <div>
+          <span className="eyebrow">{copy[lang].sections.services as string}</span>
+          <h1>{service.title[lang]}</h1>
+          <p>{service.detail[lang]}</p>
+          <div className="detail-actions">
+            <button className="outline-btn" onClick={() => navigate(routes.home, "leistungen")}>
+              <ArrowRight size={16} />
+              {lang === "de" ? "Zurück zu Leistungen" : "Back to services"}
+            </button>
+            <button className="primary-btn" onClick={() => navigate(routes.request)}>
+              {copy[lang].hero.primary as string}
+              <Send size={18} />
+            </button>
+          </div>
+        </div>
+        <div className="detail-main-image">
+          <img src={service.image} alt="" />
+          <span>
+            <Icon size={18} />
+            {service.title[lang]}
+          </span>
+        </div>
+      </div>
+      <div className="detail-gallery">
+        {service.images.map((image) => (
+          <img key={image} src={image} alt="" />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function ProjectDetailPage({ lang, navigate, slug }: { lang: Lang; navigate: (path: string, targetId?: string) => void; slug: string }) {
+  const project = projects.find((item) => item.slug === slug);
+
+  if (!project) {
+    return <SimplePage title={lang === "de" ? "Projekt nicht gefunden" : "Project not found"} text={lang === "de" ? "Dieses Projekt ist noch nicht angelegt." : "This project has not been added yet."} />;
+  }
+
+  return (
+    <section className="page-shell detail-page">
+      <div className="detail-hero">
+        <div>
+          <span className="eyebrow">{project.category[lang]}</span>
+          <h1>{project.title[lang]}</h1>
+          <p>{project.text[lang]}</p>
+          <p>
+            {lang === "de"
+              ? "Weitere Projektbilder und technische Details können später ergänzt werden, sobald die finale Bildauswahl steht."
+              : "More project images and technical details can be added later once the final image selection is ready."}
+          </p>
+          <div className="detail-actions">
+            <button className="outline-btn" onClick={() => navigate(routes.home, "projekte-home")}>
+              <ArrowRight size={16} />
+              {lang === "de" ? "Zurück zu Projekten" : "Back to projects"}
+            </button>
+            <button className="primary-btn" onClick={() => navigate(routes.request)}>
+              {copy[lang].hero.primary as string}
+              <Send size={18} />
+            </button>
+          </div>
+        </div>
+        <div className="detail-main-image">
+          <img src={project.image} alt={project.title[lang]} />
+          <span>{project.category[lang]}</span>
+        </div>
+      </div>
+      <div className="detail-gallery">
+        {project.images.map((image) => (
+          <img key={image} src={image} alt="" />
+        ))}
       </div>
     </section>
   );
@@ -707,9 +874,21 @@ function PageHero({ eyebrow, title, text }: { eyebrow: string; title: string; te
   );
 }
 
-function ProjectCard({ project, lang }: { project: (typeof projects)[number]; lang: Lang }) {
+function ProjectCard({ project, lang, onClick }: { project: (typeof projects)[number]; lang: Lang; onClick?: () => void }) {
   return (
-    <article className="project-card">
+    <article
+      className={onClick ? "project-card clickable-card" : "project-card"}
+      onClick={onClick}
+      onKeyDown={(event) => {
+        if (!onClick) return;
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          onClick();
+        }
+      }}
+      role={onClick ? "button" : undefined}
+      tabIndex={onClick ? 0 : undefined}
+    >
       <div className="project-image">
         <img src={project.image} alt={project.title[lang]} />
       </div>
@@ -717,6 +896,12 @@ function ProjectCard({ project, lang }: { project: (typeof projects)[number]; la
         <span>{project.category[lang]}</span>
         <h3>{project.title[lang]}</h3>
         <p>{project.text[lang]}</p>
+        {onClick && (
+          <button className="card-link" type="button">
+            {lang === "de" ? "Ansehen" : "View"}
+            <ArrowRight size={14} />
+          </button>
+        )}
       </div>
     </article>
   );

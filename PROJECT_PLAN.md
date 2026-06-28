@@ -613,6 +613,23 @@ Deployment:
 7. GitHub repo remote, deployment workflow, production checklist.
 8. Future AI generator design and backend architecture.
 
+## Current Visual/Interaction Fix Checklist
+
+Requested on 2026-06-28:
+
+- [x] Replace the static service image strip with a `Leistungen` section that has a one-line, constantly moving image carousel.
+- [x] Generate additional placeholder images for missing service visuals, especially fabrication, repair/service, custom/individual work, and exterior metalwork.
+- [x] Keep the scrolling carousel inside a contained band, not edge-to-edge, with side fade/cover areas so images feel like they come out from underneath the layout.
+- [x] Make carousel motion slow smoothly to a stop on pointer hover/focus and accelerate smoothly again when the pointer leaves.
+- [x] Keep the existing service icon overview below the image carousel.
+- [x] Add a detail page for each service with the main image, optional supporting images, explanatory copy, a back-to-home/services button, and an Anfrage button.
+- [x] Move projects back into the homepage as a `Projekte` section with the same smooth carousel mechanics.
+- [x] Keep a separate projects overview page reachable from a button in the homepage projects section.
+- [x] Add a detail page for each project with image, text, back-to-home/projects button, and Anfrage button.
+- [x] Adjust the floating Anfrage panel so it lives at the bottom of the viewport, opens upward with a smooth animation, can be minimized/maximized, and visually settles near the final Anfrage section at the page bottom.
+- [x] Make the top menu bar reliably sticky/floating while scrolling.
+- [x] Plan the same mechanics for mobile, with mobile-suitable horizontal touch scrolling, compact detail-page navigation, and the existing bottom contact bar preserved.
+
 ## Questions For You
 
 Questions already answered or partially answered:

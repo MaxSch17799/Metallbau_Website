@@ -26,6 +26,7 @@ export const brand = {
 export const routes = {
   home: "/",
   projects: "/projekte",
+  services: "/leistungen",
   request: "/anfrage",
   about: "/profil",
   ideas: "/ideen-generator",
@@ -224,39 +225,128 @@ export const proofPoints = [
   { icon: BadgeCheck, de: "Innen & Außen", en: "Indoor & outdoor" },
 ];
 
-export const serviceTiles = [
+export const serviceShowcases = [
   {
+    slug: "treppen-gelaender",
+    icon: Hammer,
     image: "/projects/aussentreppe-gelaender.webp",
-    de: "Treppen & Geländer",
-    en: "Stairs & railings",
+    images: ["/projects/aussentreppe-gelaender.webp", "/projects/balkon-gelaender.webp"],
+    title: { de: "Treppen & Geländer", en: "Stairs & railings" },
+    short: { de: "Außen- und Innenkonstruktionen für Haus, Garten und Alltag.", en: "Interior and exterior structures for homes, gardens and daily use." },
+    detail: {
+      de: "Treppen, Geländer und kleine Anbauten werden individuell besprochen, geplant und auf die vorhandene Situation abgestimmt. Wichtig sind klare Linien, saubere Anschlüsse und eine robuste Ausführung.",
+      en: "Stairs, railings and smaller structures are discussed individually, planned for the existing situation and built with clean connections and robust details.",
+    },
   },
   {
+    slug: "balkone-anbauten",
+    icon: ShieldCheck,
     image: "/projects/balkon-gelaender.webp",
-    de: "Balkone & Anbauten",
-    en: "Balconies & structures",
+    images: ["/projects/balkon-gelaender.webp", "/generated/exterior-metalwork-placeholder.webp"],
+    title: { de: "Balkone & Anbauten", en: "Balconies & structures" },
+    short: { de: "Metallkonstruktionen rund ums Haus, nach Absprache vor Ort.", en: "Metal structures around the home, discussed on site where useful." },
+    detail: {
+      de: "Für Balkone, Anbauten und größere Außenarbeiten steht die Abstimmung vor Ort im Vordergrund. Ziel ist eine Konstruktion, die technisch sinnvoll ist und optisch zum Haus passt.",
+      en: "For balconies, extensions and larger exterior work, the on-site situation matters most. The goal is a structure that makes technical sense and fits the building visually.",
+    },
   },
   {
+    slug: "moebel-interieur",
+    icon: Ruler,
     image: "/projects/metall-holz-tisch.webp",
-    de: "Möbel & Interieur",
-    en: "Furniture & interiors",
+    images: ["/projects/metall-holz-tisch.webp", "/projects/metall-holz-regal.webp", "/projects/metall-holz-schreibtisch.webp"],
+    title: { de: "Möbel & Interieur", en: "Furniture & interiors" },
+    short: { de: "Tische, Regale und Einzelstücke aus Metall und Holz.", en: "Tables, shelves and one-off pieces in metal and wood." },
+    detail: {
+      de: "Möbel und Interieur-Objekte verbinden Metallrahmen, Holzflächen und funktionale Details. Maße, Material und Oberfläche werden passend zum Raum und zur Nutzung festgelegt.",
+      en: "Furniture and interior objects combine metal frames, wood surfaces and functional details. Dimensions, materials and finish are chosen to fit the room and use case.",
+    },
   },
   {
+    slug: "schweissarbeiten",
+    icon: Wrench,
     image: "/generated/welding-placeholder.webp",
-    de: "Schweißarbeiten",
-    en: "Welding work",
+    images: ["/generated/welding-placeholder.webp", "/generated/fabrication-placeholder.webp"],
     generated: true,
+    title: { de: "Schweißarbeiten", en: "Welding work" },
+    short: { de: "Fertigung, Anpassung und praktische Metallarbeiten.", en: "Fabrication, adjustment and practical metalwork." },
+    detail: {
+      de: "Schweißarbeiten werden projektbezogen besprochen. Das kann eine neue Konstruktion, eine Anpassung oder eine kleine praktische Lösung sein.",
+      en: "Welding work is discussed project by project. It can be a new construction, an adjustment or a small practical solution.",
+    },
   },
   {
-    image: "/generated/embedded-prototype-placeholder.webp",
-    de: "CAD & Embedded",
-    en: "CAD & embedded",
+    slug: "cad-planung",
+    icon: DraftingCompass,
+    image: "/generated/cad-railing-placeholder.webp",
+    images: ["/generated/cad-railing-placeholder.webp", "/generated/custom-design-placeholder.webp"],
     generated: true,
+    title: { de: "Planung & CAD", en: "Planning & CAD" },
+    short: { de: "Skizzen, technische Zeichnungen und strukturierte Vorbereitung.", en: "Sketches, technical drawings and structured preparation." },
+    detail: {
+      de: "Wenn ein Projekt komplexer ist, helfen Skizzen, CAD-Modelle oder technische Zeichnungen. So werden Maße, Anschlüsse und Materialfragen geklärt, bevor gebaut wird.",
+      en: "For more complex projects, sketches, CAD models or technical drawings help clarify dimensions, connections and material questions before anything is built.",
+    },
+  },
+  {
+    slug: "reparatur-service",
+    icon: Wrench,
+    image: "/generated/repair-service-placeholder.webp",
+    images: ["/generated/repair-service-placeholder.webp", "/projects/rahmen-fertigung.webp"],
+    generated: true,
+    title: { de: "Reparatur & Service", en: "Repair & service" },
+    short: { de: "Reparaturen, Verstärkungen und Anpassungen an Metallteilen.", en: "Repairs, reinforcements and adjustments to metal parts." },
+    detail: {
+      de: "Bei Reparaturen geht es um eine ehrliche Einschätzung: Was ist sinnvoll, was hält langfristig und wann lohnt sich eine Neuanfertigung mehr als eine Reparatur.",
+      en: "For repairs, the first step is an honest assessment: what makes sense, what will last, and when a new part is better than fixing the old one.",
+    },
+  },
+  {
+    slug: "tore-zaeune-aussen",
+    icon: MapPin,
+    image: "/generated/exterior-metalwork-placeholder.webp",
+    images: ["/generated/exterior-metalwork-placeholder.webp", "/projects/tor-werkstatt.webp"],
+    generated: true,
+    title: { de: "Tore, Zäune & Außenbereich", en: "Gates, fences & exterior" },
+    short: { de: "Außenlösungen für private Eigentümer und Grundstücke.", en: "Exterior solutions for private homeowners and properties." },
+    detail: {
+      de: "Tore, Zäune und Außenkonstruktionen werden passend zum Grundstück, zur Nutzung und zum gewünschten Erscheinungsbild geplant.",
+      en: "Gates, fences and exterior structures are planned around the property, the practical use case and the desired visual appearance.",
+    },
+  },
+  {
+    slug: "embedded-prototyping",
+    icon: Cpu,
+    image: "/generated/embedded-prototype-placeholder.webp",
+    images: ["/generated/embedded-prototype-placeholder.webp", "/generated/custom-design-placeholder.webp"],
+    generated: true,
+    title: { de: "Embedded & Prototyping", en: "Embedded & prototyping" },
+    short: { de: "Spezialfähigkeit für ungewöhnliche technische Sonderlösungen.", en: "Special capability for unusual technical custom solutions." },
+    detail: {
+      de: "Embedded-Systeme und Prototyping bleiben vorerst als Spezialfähigkeit sichtbar. Sie sind vor allem relevant, wenn ein Objekt Sensorik, Steuerung, Licht oder andere technische Funktionen braucht.",
+      en: "Embedded systems and prototyping are shown as a specialist capability for now. They matter most when an object needs sensors, control, lighting or other technical functions.",
+    },
+  },
+  {
+    slug: "sonderloesungen",
+    icon: PenTool,
+    image: "/generated/custom-design-placeholder.webp",
+    images: ["/generated/custom-design-placeholder.webp", "/projects/leuchtobjekt.webp"],
+    generated: true,
+    title: { de: "Sonderlösungen", en: "Custom solutions" },
+    short: { de: "Ungewöhnliche Ideen sauber planen und praktisch umsetzen.", en: "Plan unusual ideas clearly and turn them into practical builds." },
+    detail: {
+      de: "Wenn eine Idee nicht in eine Standardschublade passt, wird sie zuerst klar beschrieben, technisch sortiert und dann in machbare Schritte übersetzt.",
+      en: "When an idea does not fit a standard category, it is first described clearly, structured technically and translated into practical steps.",
+    },
   },
 ];
 
 export const projects = [
   {
+    slug: "balkon-gelaenderanlage",
     image: "/projects/balkon-gelaender.webp",
+    images: ["/projects/balkon-gelaender.webp", "/projects/aussentreppe-gelaender.webp"],
     category: { de: "Außenbereich", en: "Exterior" },
     title: { de: "Balkon- und Geländeranlage", en: "Balcony and railing system" },
     text: {
@@ -265,7 +355,9 @@ export const projects = [
     },
   },
   {
+    slug: "metall-holz-schreibtisch",
     image: "/projects/metall-holz-schreibtisch.webp",
+    images: ["/projects/metall-holz-schreibtisch.webp", "/projects/metall-holz-tisch.webp"],
     category: { de: "Möbel", en: "Furniture" },
     title: { de: "Schreibtisch aus Metall und Holz", en: "Metal and wood desk" },
     text: {
@@ -274,7 +366,9 @@ export const projects = [
     },
   },
   {
+    slug: "regal-bettloesung",
     image: "/projects/metall-holz-regal.webp",
+    images: ["/projects/metall-holz-regal.webp", "/projects/metall-holz-schreibtisch.webp"],
     category: { de: "Innenraum", en: "Interior" },
     title: { de: "Regal- und Bettlösung", en: "Shelf and bed solution" },
     text: {
@@ -283,7 +377,9 @@ export const projects = [
     },
   },
   {
+    slug: "aussentreppe-gelaender",
     image: "/projects/aussentreppe-gelaender.webp",
+    images: ["/projects/aussentreppe-gelaender.webp", "/projects/balkon-gelaender.webp"],
     category: { de: "Außenbereich", en: "Exterior" },
     title: { de: "Außentreppe mit Geländer", en: "Outdoor stairs with railing" },
     text: {
@@ -292,7 +388,9 @@ export const projects = [
     },
   },
   {
+    slug: "leuchtobjekt",
     image: "/projects/leuchtobjekt.webp",
+    images: ["/projects/leuchtobjekt.webp", "/projects/metallblume.webp"],
     category: { de: "Designobjekt", en: "Design object" },
     title: { de: "Leuchtobjekt", en: "Light object" },
     text: {
@@ -301,7 +399,9 @@ export const projects = [
     },
   },
   {
+    slug: "tor-fertigung",
     image: "/projects/tor-werkstatt.webp",
+    images: ["/projects/tor-werkstatt.webp", "/generated/exterior-metalwork-placeholder.webp"],
     category: { de: "Fertigung", en: "Fabrication" },
     title: { de: "Tor in Fertigung", en: "Gate in fabrication" },
     text: {
@@ -310,7 +410,9 @@ export const projects = [
     },
   },
   {
+    slug: "metallblume",
     image: "/projects/metallblume.webp",
+    images: ["/projects/metallblume.webp", "/projects/leuchtobjekt.webp"],
     category: { de: "Objekt", en: "Object" },
     title: { de: "Metallblume", en: "Metal flower" },
     text: {
@@ -319,7 +421,9 @@ export const projects = [
     },
   },
   {
+    slug: "rahmenbau-werkstatt",
     image: "/projects/rahmen-fertigung.webp",
+    images: ["/projects/rahmen-fertigung.webp", "/generated/fabrication-placeholder.webp"],
     category: { de: "Prozess", en: "Process" },
     title: { de: "Rahmenbau in der Werkstatt", en: "Frame build in the workshop" },
     text: {
