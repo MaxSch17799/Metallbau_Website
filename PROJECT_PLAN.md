@@ -630,6 +630,27 @@ Requested on 2026-06-28:
 - [x] Make the top menu bar reliably sticky/floating while scrolling.
 - [x] Plan the same mechanics for mobile, with mobile-suitable horizontal touch scrolling, compact detail-page navigation, and the existing bottom contact bar preserved.
 
+## Current Navigation/Carousel Refinement Checklist
+
+Requested on 2026-06-29:
+
+- [x] Add visible left/right control areas to both scrolling carousels.
+- [x] Make right control hover speed up the carousel smoothly in the normal direction.
+- [x] Make left control hover reverse and speed up the carousel smoothly.
+- [x] Make control clicks set the default carousel direction until changed again.
+- [x] Add drag-to-scroll for carousel cards with a movement threshold so normal clicks still open detail pages.
+- [x] Add mobile-suitable carousel controls where tap changes direction and press/hold temporarily speeds up.
+- [x] Change homepage top navigation so `Leistungen`, `Projekte`, `Über mich`, and `Kontakt` scroll to homepage sections.
+- [x] Keep subpage navigation sensible and provide clear back buttons from detail pages to the exact homepage section.
+- [x] Reduce main homepage structure to `Leistungen`, `Projekte`, `Über mich`, and `Kontakt`.
+- [x] Treat CAD as a service only, not its own homepage section.
+- [x] Move `Ablauf` under the contact area as supporting contact/process content.
+- [x] Remove duplicated section titles and clean the repeated `Leistungen` heading.
+- [x] Highlight the active section in the fixed desktop header by color and slightly larger text.
+- [x] Add a compact mobile section-button row in the top banner with active highlight.
+- [x] Fix the dark green mobile background issue in the repeated services/overview area.
+- [x] Make mobile `Ablauf` a 2x2 grid with directional arrows showing the order.
+
 ## Questions For You
 
 Questions already answered or partially answered:

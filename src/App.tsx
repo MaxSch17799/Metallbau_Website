@@ -1,6 +1,7 @@
 import {
   ArrowRight,
   CheckCircle2,
+  ChevronLeft,
   ChevronRight,
   Globe2,
   Image as ImageIcon,
@@ -10,16 +11,18 @@ import {
   Menu,
   MessageCircle,
   Minimize2,
-  PencilLine,
   Phone,
   Send,
   Upload,
   X,
 } from "lucide-react";
-import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import { FormEvent, MouseEvent as ReactMouseEvent, PointerEvent as ReactPointerEvent, useEffect, useMemo, useRef, useState } from "react";
 import { brand, copy, Lang, missingImageSlots, projects, proofPoints, routes, services, serviceShowcases } from "./content";
 
 type PageKey = "home" | "projects" | "serviceDetail" | "projectDetail" | "request" | "about" | "ideas" | "legal" | "privacy";
+type HomeSection = "leistungen" | "projekte-home" | "ueber-mich-home" | "kontakt-home";
+
+const homeSectionIds: HomeSection[] = ["leistungen", "projekte-home", "ueber-mich-home", "kontakt-home"];
 
 const pathToPage: Record<string, PageKey> = {
   [routes.home]: "home",
@@ -58,6 +61,7 @@ export function App() {
   });
   const [page, setPage] = useState<PageKey>(() => getPageFromPath(window.location.pathname));
   const [slug, setSlug] = useState(() => getSlugFromPath(window.location.pathname));
+  const [activeSection, setActiveSection] = useState<HomeSection>("leistungen");
   const t = copy[lang];
 
   useEffect(() => {
@@ -74,6 +78,34 @@ export function App() {
     return () => window.removeEventListener("popstate", onPop);
   }, []);
 
+  useEffect(() => {
+    if (page !== "home") return;
+
+    const updateActiveSection = () => {
+      let current = homeSectionIds[0];
+      const anchor = window.innerHeight * 0.38;
+
+      for (const id of homeSectionIds) {
+        const element = document.getElementById(id);
+        if (!element) continue;
+        const rect = element.getBoundingClientRect();
+        if (rect.top <= anchor && rect.bottom > 120) {
+          current = id;
+        }
+      }
+
+      setActiveSection(current);
+    };
+
+    updateActiveSection();
+    window.addEventListener("scroll", updateActiveSection, { passive: true });
+    window.addEventListener("resize", updateActiveSection);
+    return () => {
+      window.removeEventListener("scroll", updateActiveSection);
+      window.removeEventListener("resize", updateActiveSection);
+    };
+  }, [page]);
+
   const navigate = (path: string, targetId?: string) => {
     window.history.pushState({}, "", path);
     setPage(getPageFromPath(path));
@@ -87,7 +119,7 @@ export function App() {
 
   return (
     <>
-      <Header lang={lang} setLang={setLang} navigate={navigate} page={page} />
+      <Header lang={lang} setLang={setLang} navigate={navigate} page={page} activeSection={activeSection} />
       <main>
         {page === "home" && <HomePage lang={lang} navigate={navigate} />}
         {page === "projects" && <ProjectsPage lang={lang} navigate={navigate} />}
@@ -111,25 +143,38 @@ function Header({
   setLang,
   navigate,
   page,
+  activeSection,
 }: {
   lang: Lang;
   setLang: (lang: Lang) => void;
   navigate: (path: string, targetId?: string) => void;
   page: PageKey;
+  activeSection: HomeSection;
 }) {
   const [open, setOpen] = useState(false);
   const t = copy[lang];
   const nav = [
-    [routes.home, t.nav.services, "leistungen"],
-    [routes.projects, t.nav.projects],
-    [routes.about, t.nav.about],
-    [routes.home, t.nav.planning, "planung-cad"],
-    [routes.request, t.nav.contact],
+    { section: "leistungen", label: t.nav.services, subPath: routes.home },
+    { section: "projekte-home", label: t.nav.projects, subPath: routes.projects },
+    { section: "ueber-mich-home", label: t.nav.about, subPath: routes.about },
+    { section: "kontakt-home", label: t.nav.contact, subPath: routes.request },
   ] as const;
 
   const onNav = (path: string, targetId?: string) => {
     navigate(path, targetId);
     setOpen(false);
+  };
+
+  const onSectionNav = (item: (typeof nav)[number]) => {
+    if (page === "home") {
+      onNav(routes.home, item.section);
+      return;
+    }
+    onNav(item.subPath, item.subPath === routes.home ? item.section : undefined);
+  };
+
+  const onMobileSectionNav = (section: HomeSection) => {
+    onNav(routes.home, section);
   };
 
   return (
@@ -153,9 +198,13 @@ function Header({
           </span>
         </button>
         <nav className="desktop-nav" aria-label="Main navigation">
-          {nav.map(([path, label, targetId]) => (
-            <button className={pathToPage[path] === page ? "active" : ""} key={`${path}-${label}`} onClick={() => onNav(path, targetId)}>
-              {label}
+          {nav.map((item) => (
+            <button
+              className={(page === "home" && activeSection === item.section) || (page !== "home" && pathToPage[item.subPath] === page) ? "active" : ""}
+              key={item.section}
+              onClick={() => onSectionNav(item)}
+            >
+              {item.label}
             </button>
           ))}
         </nav>
@@ -178,11 +227,18 @@ function Header({
           </button>
         </div>
       </div>
+      <nav className="mobile-section-tabs" aria-label={lang === "de" ? "Bereiche" : "Sections"}>
+        {nav.map((item) => (
+          <button className={activeSection === item.section ? "active" : ""} key={`mobile-${item.section}`} onClick={() => onMobileSectionNav(item.section)}>
+            {item.label}
+          </button>
+        ))}
+      </nav>
       {open && (
         <nav className="mobile-nav" aria-label="Mobile navigation">
-          {nav.map(([path, label, targetId]) => (
-            <button key={`${path}-${label}`} onClick={() => onNav(path, targetId)}>
-              {label}
+          {nav.map((item) => (
+            <button key={`${item.section}-${item.label}`} onClick={() => onSectionNav(item)}>
+              {item.label}
               <ChevronRight size={18} />
             </button>
           ))}
@@ -220,7 +276,7 @@ function HomePage({ lang, navigate }: { lang: Lang; navigate: (path: string, tar
               {lang === "de" ? "Anfrage starten" : "Start request"}
               <ArrowRight size={18} />
             </button>
-            <button className="text-btn" onClick={() => navigate(routes.projects)}>
+            <button className="text-btn" onClick={() => navigate(routes.home, "projekte-home")}>
               {lang === "de" ? "Projekte ansehen" : "View projects"}
               <ArrowRight size={18} />
             </button>
@@ -247,6 +303,16 @@ function HomePage({ lang, navigate }: { lang: Lang; navigate: (path: string, tar
           onSelect={(item) => navigate(servicePath(item.slug))}
           variant="services"
         />
+        <div className="showcase-actions">
+          <button className="outline-btn" onClick={() => navigate(servicePath("cad-planung"))}>
+            {lang === "de" ? "Mehr zu Planung & CAD" : "More about planning & CAD"}
+            <ArrowRight size={16} />
+          </button>
+          <button className="text-btn" onClick={() => navigate(routes.request)}>
+            {t.hero.primary}
+            <ArrowRight size={16} />
+          </button>
+        </div>
       </section>
 
       <section className="proof-strip" aria-label="Highlights">
@@ -262,7 +328,7 @@ function HomePage({ lang, navigate }: { lang: Lang; navigate: (path: string, tar
       </section>
 
       <section className="section-band capabilities-band">
-        <SectionIntro title={t.sections.services} text={lang === "de" ? "Überblick über Leistungen und Schwerpunkte." : "Overview of services and focus areas."} />
+        <SectionIntro title={lang === "de" ? "Überblick" : "Overview"} text={lang === "de" ? "Schwerpunkte, die sich je nach Projekt kombinieren lassen." : "Focus areas that can be combined depending on the project."} />
         <div className="service-grid">
           {services.map((service, index) => {
             const Icon = service.icon;
@@ -295,45 +361,7 @@ function HomePage({ lang, navigate }: { lang: Lang; navigate: (path: string, tar
         />
       </section>
 
-      <section className="mobile-request-split">
-        <div>
-          <PenIcon />
-          <h2>{lang === "de" ? "Ihr Projekt. Unsere Lösung." : "Your project. A practical solution."}</h2>
-          <p>{lang === "de" ? "Ob Idee oder konkreter Plan - wir beraten Sie ehrlich und kompetent." : "Whether it is a rough idea or a concrete plan, we can discuss the next step."}</p>
-        </div>
-        <img src="/projects/metall-holz-tisch.webp" alt="" />
-      </section>
-
-      <section className="planning-section" id="planung-cad">
-        <div className="planning-copy">
-          <span className="eyebrow">{t.sections.planning}</span>
-          <h2>{lang === "de" ? "Technische Planung, CAD und funktionale Prototypen." : "Technical planning, CAD and functional prototypes."}</h2>
-          <p>
-            {lang === "de"
-              ? "Für Sonderanfertigungen kann ich Ideen in Skizzen, CAD-Modelle, technische Zeichnungen und einfache Funktionsprototypen übersetzen. Embedded-Systeme und Elektronik bleiben als Spezialfähigkeit sichtbar, bis echte Beispielarbeiten ergänzt werden."
-              : "For custom work, I can translate ideas into sketches, CAD models, technical drawings and simple functional prototypes. Embedded systems and electronics remain visible as a specialist capability until real examples are added."}
-          </p>
-        </div>
-        <div className="planning-media">
-          <img src="/generated/cad-railing-placeholder.webp" alt="" />
-          <img src="/generated/embedded-prototype-placeholder.webp" alt="" />
-        </div>
-      </section>
-
-      <section className="process-section">
-        <SectionIntro title={t.sections.process} text={lang === "de" ? "Strukturiert genug für komplexe Details, pragmatisch genug für schnelle Lösungen." : "Structured enough for complex details, pragmatic enough for fast solutions."} />
-        <div className="process-grid">
-          {t.process.map(([step, title, text]) => (
-            <article key={step}>
-              <span>{step}</span>
-              <h3>{title}</h3>
-              <p>{text}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="about-teaser">
+      <section className="about-teaser" id="ueber-mich-home">
         <div className="portrait-placeholder">
           <ImageIcon size={24} />
           <span>{lang === "de" ? "Portrait / Werkstattfoto" : "Portrait / workshop photo"}</span>
@@ -349,15 +377,29 @@ function HomePage({ lang, navigate }: { lang: Lang; navigate: (path: string, tar
         </div>
       </section>
 
-      <section className="request-band">
-        <div>
-          <span className="eyebrow">{t.sections.request}</span>
-          <h2>{t.requestTeaser}</h2>
+      <section className="contact-home-section" id="kontakt-home">
+        <div className="request-band">
+          <div>
+            <span className="eyebrow">{t.sections.request}</span>
+            <h2>{t.requestTeaser}</h2>
+          </div>
+          <button className="primary-btn" onClick={() => navigate(routes.request)}>
+            {t.hero.primary}
+            <Send size={18} />
+          </button>
         </div>
-        <button className="primary-btn" onClick={() => navigate(routes.request)}>
-          {t.hero.primary}
-          <Send size={18} />
-        </button>
+        <div className="process-section contact-process">
+          <SectionIntro title={t.sections.process} text={lang === "de" ? "So läuft eine Anfrage typischerweise ab." : "How a request usually moves forward."} />
+          <div className="process-grid">
+            {t.process.map(([step, title, text]) => (
+              <article key={step}>
+                <span>{step}</span>
+                <h3>{title}</h3>
+                <p>{text}</p>
+              </article>
+            ))}
+          </div>
+        </div>
       </section>
     </>
   );
@@ -377,12 +419,51 @@ function SmoothScroller<T extends SmoothItem>({
   variant: "services" | "projects";
 }) {
   const trackRef = useRef<HTMLDivElement>(null);
-  const targetSpeed = useRef(34);
-  const currentSpeed = useRef(34);
+  const baseSpeed = variant === "services" ? 34 : 28;
+  const boostSpeed = variant === "services" ? 104 : 88;
+  const baseDirection = useRef(1);
+  const targetVelocity = useRef(baseSpeed);
+  const currentVelocity = useRef(baseSpeed);
   const position = useRef(0);
   const frame = useRef<number | null>(null);
   const lastTime = useRef<number | null>(null);
+  const dragState = useRef<{ pointerId: number; startX: number; startPosition: number; dragging: boolean } | null>(null);
+  const suppressClick = useRef(false);
+  const [dragging, setDragging] = useState(false);
   const repeated = useMemo(() => [...items, ...items, ...items], [items]);
+
+  const normalizePosition = (loopWidth: number) => {
+    if (loopWidth <= 0) return;
+    while (position.current <= -loopWidth) position.current += loopWidth;
+    while (position.current > 0) position.current -= loopWidth;
+  };
+
+  const applyTransform = () => {
+    if (trackRef.current) {
+      trackRef.current.style.transform = `translate3d(${position.current}px, 0, 0)`;
+    }
+  };
+
+  const setTarget = (direction: number, speed: number) => {
+    targetVelocity.current = direction * speed;
+  };
+
+  const resume = () => {
+    setTarget(baseDirection.current, baseSpeed);
+  };
+
+  const pause = () => {
+    targetVelocity.current = 0;
+  };
+
+  const boost = (direction: number) => {
+    setTarget(direction, boostSpeed);
+  };
+
+  const chooseDirection = (direction: number) => {
+    baseDirection.current = direction;
+    setTarget(direction, baseSpeed);
+  };
 
   useEffect(() => {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -395,14 +476,13 @@ function SmoothScroller<T extends SmoothItem>({
       const delta = lastTime.current === null ? 0 : Math.min((time - lastTime.current) / 1000, 0.05);
       lastTime.current = time;
 
-      currentSpeed.current += (targetSpeed.current - currentSpeed.current) * 0.055;
-      position.current -= currentSpeed.current * delta;
-
       const loopWidth = track.scrollWidth / 3;
-      if (loopWidth > 0 && Math.abs(position.current) >= loopWidth) {
-        position.current += loopWidth;
+      if (!dragState.current?.dragging) {
+        currentVelocity.current += (targetVelocity.current - currentVelocity.current) * 0.07;
+        position.current -= currentVelocity.current * delta;
       }
 
+      normalizePosition(loopWidth);
       track.style.transform = `translate3d(${position.current}px, 0, 0)`;
       frame.current = window.requestAnimationFrame(tick);
     };
@@ -413,20 +493,102 @@ function SmoothScroller<T extends SmoothItem>({
     };
   }, []);
 
-  const slow = () => {
-    targetSpeed.current = 0;
+  const onViewportPointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (event.pointerType === "mouse" && event.button !== 0) return;
+    dragState.current = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startPosition: position.current,
+      dragging: false,
+    };
+    pause();
+    event.currentTarget.setPointerCapture(event.pointerId);
   };
 
-  const resume = () => {
-    targetSpeed.current = variant === "services" ? 34 : 28;
+  const onViewportPointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
+    const state = dragState.current;
+    if (!state || state.pointerId !== event.pointerId) return;
+
+    const movement = event.clientX - state.startX;
+    if (!state.dragging && Math.abs(movement) > 9) {
+      state.dragging = true;
+      suppressClick.current = true;
+      setDragging(true);
+    }
+
+    if (!state.dragging) return;
+
+    const track = trackRef.current;
+    if (!track) return;
+
+    currentVelocity.current = 0;
+    targetVelocity.current = 0;
+    position.current = state.startPosition + movement;
+    normalizePosition(track.scrollWidth / 3);
+    applyTransform();
+  };
+
+  const finishViewportPointer = (event: ReactPointerEvent<HTMLDivElement>) => {
+    const state = dragState.current;
+    if (!state || state.pointerId !== event.pointerId) return;
+
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+
+    dragState.current = null;
+    setDragging(false);
+    resume();
+
+    if (state.dragging) {
+      window.setTimeout(() => {
+        suppressClick.current = false;
+      }, 0);
+    }
+  };
+
+  const onCardClick = (event: ReactMouseEvent<HTMLButtonElement>, item: T) => {
+    if (suppressClick.current) {
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
+    onSelect(item);
+  };
+
+  const directionLabel = (direction: number) => {
+    if (direction < 0) return lang === "de" ? "Richtung links" : "Scroll left";
+    return lang === "de" ? "Richtung rechts" : "Scroll right";
   };
 
   return (
-    <div className={`smooth-scroller ${variant}`} onPointerEnter={slow} onPointerLeave={resume} onFocusCapture={slow} onBlurCapture={resume}>
-      <div className="scroller-viewport">
-        <div className="scroller-track" ref={trackRef}>
+    <div className={`smooth-scroller ${variant}`}>
+      <button
+        className="scroller-control scroller-control-left"
+        aria-label={directionLabel(-1)}
+        onClick={() => chooseDirection(-1)}
+        onPointerCancel={resume}
+        onPointerDown={() => boost(-1)}
+        onPointerEnter={() => boost(-1)}
+        onPointerLeave={resume}
+        onPointerUp={() => chooseDirection(-1)}
+        type="button"
+      >
+        <ChevronLeft size={28} />
+      </button>
+      <div
+        className={dragging ? "scroller-viewport is-dragging" : "scroller-viewport"}
+        onPointerCancel={finishViewportPointer}
+        onPointerDown={onViewportPointerDown}
+        onPointerLeave={() => {
+          if (!dragState.current) resume();
+        }}
+        onPointerMove={onViewportPointerMove}
+        onPointerUp={finishViewportPointer}
+      >
+        <div className="scroller-track" onBlurCapture={resume} onFocusCapture={pause} onPointerEnter={pause} onPointerLeave={resume} ref={trackRef}>
           {repeated.map((item, index) => (
-            <button className="showcase-card" key={`${item.slug}-${index}`} onClick={() => onSelect(item)}>
+            <button className="showcase-card" key={`${item.slug}-${index}`} onClick={(event) => onCardClick(event, item)}>
               <img src={item.image} alt="" />
               <span>{("category" in item ? item.category[lang] : variant === "services" ? copy[lang].sections.services : copy[lang].sections.projects) as string}</span>
               <strong>{item.title[lang]}</strong>
@@ -436,6 +598,19 @@ function SmoothScroller<T extends SmoothItem>({
           ))}
         </div>
       </div>
+      <button
+        className="scroller-control scroller-control-right"
+        aria-label={directionLabel(1)}
+        onClick={() => chooseDirection(1)}
+        onPointerCancel={resume}
+        onPointerDown={() => boost(1)}
+        onPointerEnter={() => boost(1)}
+        onPointerLeave={resume}
+        onPointerUp={() => chooseDirection(1)}
+        type="button"
+      >
+        <ChevronRight size={28} />
+      </button>
     </div>
   );
 }
@@ -514,10 +689,6 @@ function MobileContactBar({ lang, navigate }: { lang: Lang; navigate: (path: str
       </button>
     </div>
   );
-}
-
-function PenIcon() {
-  return <PencilLine size={25} />;
 }
 
 function ProjectsPage({ lang, navigate }: { lang: Lang; navigate: (path: string) => void }) {
