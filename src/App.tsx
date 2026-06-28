@@ -5,9 +5,12 @@ import {
   Globe2,
   Image as ImageIcon,
   LockKeyhole,
+  Maximize2,
   Mail,
   Menu,
   MessageCircle,
+  Minimize2,
+  PencilLine,
   Phone,
   Send,
   Upload,
@@ -80,6 +83,8 @@ export function App() {
         {page === "privacy" && <SimplePage title={t.privacy.title} text={t.privacy.text} />}
       </main>
       <Footer lang={lang} navigate={navigate} />
+      <FloatingRequestPanel lang={lang} navigate={navigate} />
+      <MobileContactBar lang={lang} navigate={navigate} />
     </>
   );
 }
@@ -123,8 +128,11 @@ function Header({
         <button className="brand-lockup" onClick={() => onNav(routes.home)} aria-label={brand.name}>
           <span className="brand-mark">MS</span>
           <span>
-            <strong>{brand.name}</strong>
-            <small>{lang === "de" ? "Metall. Holz. Planung." : "Metal. Wood. Planning."}</small>
+            <strong>
+              <span className="brand-desktop">{brand.name}</span>
+              <span className="brand-mobile">Schimmel</span>
+            </strong>
+            <small>{lang === "de" ? "Metallbau & Design" : "Metalwork & Design"}</small>
           </span>
         </button>
         <nav className="desktop-nav" aria-label="Main navigation">
@@ -136,9 +144,14 @@ function Header({
         </nav>
         <div className="nav-actions">
           <button className="lang-toggle" onClick={() => setLang(lang === "de" ? "en" : "de")}>
-            <Globe2 size={16} />
-            {lang === "de" ? "EN" : "DE"}
+            <Globe2 className="lang-icon" size={16} />
+            <span className={lang === "de" ? "active-lang" : undefined}>DE</span>
+            <i>|</i>
+            <span className={lang === "en" ? "active-lang" : undefined}>EN</span>
           </button>
+          <a className="icon-btn mobile-call" href={`tel:${brand.phone.replaceAll(" ", "")}`} aria-label={t.nav.call}>
+            <Phone size={21} />
+          </a>
           <button className="outline-btn desktop-only" onClick={() => onNav(routes.request)}>
             {t.nav.request}
             <ArrowRight size={16} />
@@ -165,6 +178,7 @@ function Header({
 function HomePage({ lang, navigate }: { lang: Lang; navigate: (path: string) => void }) {
   const t = copy[lang];
   const featured = projects.slice(0, 4);
+  const mobileFeatured = [projects[2], projects[3], projects[5], projects[0]];
 
   return (
     <>
@@ -175,7 +189,7 @@ function HomePage({ lang, navigate }: { lang: Lang; navigate: (path: string) => 
             {lang === "de" ? (
               <>
                 <span>
-                  Sonder<span className="mobile-title-break" aria-hidden="true" />anfertigungen
+                  Sonder<wbr />anfertigungen
                 </span>
                 <span>aus Metall und Holz.</span>
               </>
@@ -205,20 +219,6 @@ function HomePage({ lang, navigate }: { lang: Lang; navigate: (path: string) => 
             <strong>{lang === "de" ? "Handwerk aus Seeheim" : "Craft from Seeheim"}</strong>
             <span>{lang === "de" ? "persönlich" : "personal"}</span>
           </div>
-          <div className="quick-request-card">
-            <strong>{lang === "de" ? "Ihr Projekt. Unsere Lösung." : "Your project. A practical solution."}</strong>
-            <p>{lang === "de" ? "Kurz beschreiben - ich melde mich schnellstmöglich." : "Describe it briefly and I will get back to you."}</p>
-            <input readOnly placeholder={lang === "de" ? "Ihr Name" : "Your name"} />
-            <input readOnly placeholder={lang === "de" ? "Telefon oder E-Mail" : "Phone or email"} />
-            <button onClick={() => navigate(routes.request)}>
-              {lang === "de" ? "Anfrage starten" : "Start request"}
-              <ArrowRight size={16} />
-            </button>
-            <a href={`https://wa.me/${brand.whatsapp}`}>
-              <MessageCircle size={16} />
-              WhatsApp / {brand.phone}
-            </a>
-          </div>
         </div>
       </section>
 
@@ -241,6 +241,35 @@ function HomePage({ lang, navigate }: { lang: Lang; navigate: (path: string) => 
             </div>
           );
         })}
+      </section>
+
+      <section className="mobile-project-preview" aria-label={t.sections.featured}>
+        <div className="mobile-section-head">
+          <h2>{t.nav.projects}</h2>
+          <button onClick={() => navigate(routes.projects)}>
+            {lang === "de" ? "Alle ansehen" : "View all"}
+            <ArrowRight size={15} />
+          </button>
+        </div>
+        <div className="mobile-project-track">
+          {mobileFeatured.map((project) => (
+            <ProjectCard key={`mobile-${project.image}`} project={project} lang={lang} />
+          ))}
+        </div>
+        <div className="mobile-slider-dots" aria-hidden="true">
+          <span />
+          <span />
+          <span />
+        </div>
+      </section>
+
+      <section className="mobile-request-split">
+        <div>
+          <PenIcon />
+          <h2>{lang === "de" ? "Ihr Projekt. Unsere Lösung." : "Your project. A practical solution."}</h2>
+          <p>{lang === "de" ? "Ob Idee oder konkreter Plan - wir beraten Sie ehrlich und kompetent." : "Whether it is a rough idea or a concrete plan, we can discuss the next step."}</p>
+        </div>
+        <img src="/projects/metall-holz-tisch.webp" alt="" />
       </section>
 
       <section className="section-band capabilities-band">
@@ -343,6 +372,73 @@ function HomePage({ lang, navigate }: { lang: Lang; navigate: (path: string) => 
       </section>
     </>
   );
+}
+
+function FloatingRequestPanel({ lang, navigate }: { lang: Lang; navigate: (path: string) => void }) {
+  const [open, setOpen] = useState(true);
+
+  if (!open) {
+    return (
+      <button className="floating-request-tab" onClick={() => setOpen(true)} aria-label={lang === "de" ? "Anfrage öffnen" : "Open request panel"}>
+        <Maximize2 size={16} />
+        <span>{lang === "de" ? "Anfrage" : "Request"}</span>
+      </button>
+    );
+  }
+
+  return (
+    <aside className="floating-request-panel" aria-label={lang === "de" ? "Schnellanfrage" : "Quick request"}>
+      <div className="floating-request-title">
+        <strong>{lang === "de" ? "Ihr Projekt. Unsere Lösung." : "Your project. A practical solution."}</strong>
+        <button onClick={() => setOpen(false)} aria-label={lang === "de" ? "Minimieren" : "Minimize"}>
+          <Minimize2 size={17} />
+        </button>
+      </div>
+      <form
+        onSubmit={(event) => {
+          event.preventDefault();
+          navigate(routes.request);
+        }}
+      >
+        <p>{lang === "de" ? "Kurz beschreiben - ich melde mich schnellstmöglich." : "Describe it briefly and I will get back to you."}</p>
+        <input placeholder={lang === "de" ? "Ihr Name" : "Your name"} />
+        <input placeholder={lang === "de" ? "Telefon oder E-Mail" : "Phone or email"} />
+        <button type="submit">
+          {lang === "de" ? "Anfrage starten" : "Start request"}
+          <ArrowRight size={17} />
+        </button>
+      </form>
+      <a href={`https://wa.me/${brand.whatsapp}`}>
+        <MessageCircle size={18} />
+        WhatsApp / {brand.phone}
+      </a>
+    </aside>
+  );
+}
+
+function MobileContactBar({ lang, navigate }: { lang: Lang; navigate: (path: string) => void }) {
+  return (
+    <div className="mobile-contact-bar">
+      <a href={`tel:${brand.phone.replaceAll(" ", "")}`}>
+        <Phone size={22} />
+        <span>
+          <strong>{brand.phone}</strong>
+          <small>{lang === "de" ? "Mo-Fr 08-17" : "Mon-Fri 08-17"}</small>
+        </span>
+      </a>
+      <button onClick={() => navigate(routes.request)}>
+        <MessageCircle size={22} />
+        <span>
+          <strong>{lang === "de" ? "Jetzt Anfrage starten" : "Start a request"}</strong>
+          <small>{lang === "de" ? "Unverbindlich & schnell" : "Quick first contact"}</small>
+        </span>
+      </button>
+    </div>
+  );
+}
+
+function PenIcon() {
+  return <PencilLine size={25} />;
 }
 
 function ProjectsPage({ lang, navigate }: { lang: Lang; navigate: (path: string) => void }) {

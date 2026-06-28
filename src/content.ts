@@ -1,7 +1,5 @@
 import {
   BadgeCheck,
-  BriefcaseBusiness,
-  Clock,
   DraftingCompass,
   Cpu,
   Hammer,
@@ -218,12 +216,12 @@ export const services = [
 ];
 
 export const proofPoints = [
-  { icon: MapPin, de: "Basis in Seeheim", en: "Based in Seeheim" },
-  { icon: ShieldCheck, de: "Präzise Fertigung", en: "Precise fabrication" },
-  { icon: BriefcaseBusiness, de: "Metallbau-Erfahrung", en: "Metalworking experience" },
-  { icon: BadgeCheck, de: "Engineering-Hintergrund", en: "Engineering background" },
-  { icon: Clock, de: "Mo-Fr erreichbar", en: "Available Mon-Fri" },
-  { icon: Sparkles, de: "Innen & Außen", en: "Indoor & outdoor" },
+  { icon: DraftingCompass, de: "Planung & CAD", en: "Planning & CAD" },
+  { icon: ShieldCheck, de: "Fertigung", en: "Fabrication" },
+  { icon: Sparkles, de: "Individuell", en: "Individual" },
+  { icon: MapPin, de: "Aus Seeheim", en: "From Seeheim" },
+  { icon: Wrench, de: "Reparatur & Service", en: "Repair & service" },
+  { icon: BadgeCheck, de: "Innen & Außen", en: "Indoor & outdoor" },
 ];
 
 export const serviceTiles = [
