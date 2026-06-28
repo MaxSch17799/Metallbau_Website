@@ -1,0 +1,21 @@
+node_modules/
+dist/
+.wrangler/
+.dev.vars
+.env
+.env.*
+!.env.example
+*.log
+coverage/
+.DS_Store
+Thumbs.db
+
+# Local raw/recovery assets. Optimized selected website assets can be copied
+# into the app later, for example under public/projects/.
+Metal work.zip
+Metallbau_images _broken/
+Metallbau_images _fixed/
+Example work/
+CV_Maximilian_Schimmel.pdf
+Restore-CorruptedImages.ps1
+Run Image Recovery.cmd
