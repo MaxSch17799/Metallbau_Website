@@ -81,7 +81,7 @@ Official docs checked for planning:
   - Can travel for suitable on-site projects.
   - Can ship or deliver furniture and smaller fabricated items across Germany.
 - Phone: `+49 176 98472569`.
-- Email: should be a new public business address that forwards to the main Gmail, not the private Gmail address.
+- Email: use a new free Gmail address for v1, forwarding to the main Gmail. No custom domain email yet.
 - Call availability:
   - Monday to Friday, 08:00-17:00.
   - Also invite people to try outside those times in a professional way, for example: "Sollten Sie uns ausserhalb dieser Zeiten erreichen wollen, melden Sie sich gern trotzdem - wenn es passt, nehmen wir Ihren Anruf entgegen oder rufen zeitnah zurueck."
@@ -158,7 +158,31 @@ If you want less personal-name branding:
 
 ## Public Email Setup Recommendation
 
-Best free/low-cost path if a domain is available:
+V1 decision:
+
+- Use a new free Gmail account for now.
+- Do not use a custom domain email yet.
+- Do not publish the private main Gmail address on the website.
+- Forward the new business Gmail inbox to the private main Gmail account.
+- Optionally add the new business Gmail as a "send mail as" address inside the main Gmail account, or simply reply from the new Gmail account when needed.
+
+Suggested free Gmail names to try:
+
+- `schimmel.metallbau@gmail.com`
+- `schimmel.metallbau.design@gmail.com`
+- `metallbau.schimmel@gmail.com`
+- `metallundholz.schimmel@gmail.com`
+- `schimmel.metalltechnik@gmail.com`
+- `metallwerk.seeheim@gmail.com`
+- `seeheim.metallbau@gmail.com`
+
+Important:
+
+- A free Gmail address will be less professional than `kontakt@...de`, but it keeps v1 fully free.
+- The website should display the business Gmail address, not the private Gmail.
+- The contact form backend can send notifications to either the new business Gmail or directly to the private Gmail, but public-facing replies should come from the business Gmail.
+
+Later, when a domain is available:
 
 - Use a custom domain email such as `anfrage@your-domain.de`.
 - Use Cloudflare Email Routing to forward that address to your main Gmail.
@@ -393,14 +417,21 @@ Clear, conversion-focused, still polished.
 
 Current preference:
 
-- Keep options 1, 3, and 5.
+- Main preference after generated examples: options 3 and 5.
+- Do not pursue the black/dark showroom style as the main direction.
+- Keep a little premium metal texture/detail where useful, but avoid a mostly black homepage.
+- Generate and compare three follow-up variants:
+  - Minimalist architectural precision.
+  - Fancy modern architectural/local hybrid.
+  - Very clear practical local expert.
 - Do not pursue direction 2 "Warm Workshop Craft" as the main direction.
 - Do not pursue direction 4 "Industrial Editorial" as the main direction.
 
 Recommended hybrid:
 
 - Use `Architectural Precision` as the base because it matches furniture/interior design, CAD, technical drawings, and exterior metalwork.
-- Add `Blackened Steel Showroom` moments for premium hero/project sections.
+- Add the clarity of `Practical Local Expert` for navigation, contact, services, and request flow.
+- Use restrained premium details instead of the full `Blackened Steel Showroom` direction.
 - Preserve `Practical Local Expert` clarity for the contact flow and local SEO.
 
 This avoids making the site too dark, too artsy, or too generic.
@@ -522,6 +553,7 @@ Deployment:
 - Logo/brand direction.
 - Which images become public portfolio images.
 - Final email/domain setup.
+- Free Gmail address selection.
 - Email sending provider or notification channel.
 - Custom domain.
 - Legal pages.
@@ -555,7 +587,7 @@ Please answer these next:
 
 1. Which public business name do you prefer from the list, or should I generate more?
 2. Do you already own a domain, or should we search for available `.de` domains?
-3. Do you want `anfrage@...`, `kontakt@...`, or `info@...` as the public email local-part?
+3. Which free Gmail address should be created and shown publicly?
 4. Should WhatsApp be shown as a contact option?
 5. Should the website say you perform electrical/embedded work publicly, or only mention it as part of complex engineering/custom builds?
 6. Do you want to advertise woodwork as a full service, or only as metal/wood furniture combinations?
