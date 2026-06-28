@@ -7,13 +7,14 @@ import {
   LockKeyhole,
   Mail,
   Menu,
+  MessageCircle,
   Phone,
   Send,
   Upload,
   X,
 } from "lucide-react";
 import { FormEvent, useEffect, useMemo, useState } from "react";
-import { brand, copy, Lang, missingImageSlots, projects, proofPoints, routes, services } from "./content";
+import { brand, copy, Lang, missingImageSlots, projects, proofPoints, routes, services, serviceTiles } from "./content";
 
 type PageKey = "home" | "projects" | "request" | "about" | "ideas" | "legal" | "privacy";
 
@@ -22,14 +23,15 @@ const pathToPage: Record<string, PageKey> = {
   [routes.projects]: "projects",
   [routes.request]: "request",
   [routes.about]: "about",
+  "/ueber-mich": "about",
   [routes.ideas]: "ideas",
   [routes.legal]: "legal",
   [routes.privacy]: "privacy",
 };
 
 const projectTypes = [
-  "Metall- und Holzmoebel",
-  "Tor / Gelaender / Zaun",
+  "Metall- und Holzmöbel",
+  "Tor / Geländer / Zaun",
   "Treppe / Balkon",
   "Reparatur",
   "CAD / technische Zeichnung",
@@ -55,10 +57,14 @@ export function App() {
     return () => window.removeEventListener("popstate", onPop);
   }, []);
 
-  const navigate = (path: string) => {
+  const navigate = (path: string, targetId?: string) => {
     window.history.pushState({}, "", path);
     setPage(pathToPage[path] ?? "home");
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (targetId) {
+      window.setTimeout(() => document.getElementById(targetId)?.scrollIntoView({ behavior: "smooth" }), 40);
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
   };
 
   return (
@@ -86,19 +92,21 @@ function Header({
 }: {
   lang: Lang;
   setLang: (lang: Lang) => void;
-  navigate: (path: string) => void;
+  navigate: (path: string, targetId?: string) => void;
   page: PageKey;
 }) {
   const [open, setOpen] = useState(false);
   const t = copy[lang];
   const nav = [
+    [routes.home, t.nav.services, "leistungen"],
     [routes.projects, t.nav.projects],
-    [routes.request, t.nav.request],
     [routes.about, t.nav.about],
+    [routes.home, t.nav.planning, "planung-cad"],
+    [routes.request, t.nav.contact],
   ] as const;
 
-  const onNav = (path: string) => {
-    navigate(path);
+  const onNav = (path: string, targetId?: string) => {
+    navigate(path, targetId);
     setOpen(false);
   };
 
@@ -120,8 +128,8 @@ function Header({
           </span>
         </button>
         <nav className="desktop-nav" aria-label="Main navigation">
-          {nav.map(([path, label]) => (
-            <button className={pathToPage[path] === page ? "active" : ""} key={path} onClick={() => onNav(path)}>
+          {nav.map(([path, label, targetId]) => (
+            <button className={pathToPage[path] === page ? "active" : ""} key={`${path}-${label}`} onClick={() => onNav(path, targetId)}>
               {label}
             </button>
           ))}
@@ -142,8 +150,8 @@ function Header({
       </div>
       {open && (
         <nav className="mobile-nav" aria-label="Mobile navigation">
-          {nav.map(([path, label]) => (
-            <button key={path} onClick={() => onNav(path)}>
+          {nav.map(([path, label, targetId]) => (
+            <button key={`${path}-${label}`} onClick={() => onNav(path, targetId)}>
               {label}
               <ChevronRight size={18} />
             </button>
@@ -157,67 +165,73 @@ function Header({
 function HomePage({ lang, navigate }: { lang: Lang; navigate: (path: string) => void }) {
   const t = copy[lang];
   const featured = projects.slice(0, 4);
-  const materials =
-    lang === "de"
-      ? ["Stahl", "Holz", "Gelaender", "Moebel", "CAD", "Reparatur", "Montage"]
-      : ["Steel", "Wood", "Railings", "Furniture", "CAD", "Repair", "Installation"];
 
   return (
     <>
       <section className="hero-section">
         <div className="hero-copy">
           <span className="eyebrow">{t.hero.kicker}</span>
-          <h1>{t.hero.title}</h1>
+          <h1>
+            {lang === "de" ? (
+              <>
+                <span>
+                  Sonder<span className="mobile-title-break" aria-hidden="true" />anfertigungen
+                </span>
+                <span>aus Metall und Holz.</span>
+              </>
+            ) : (
+              t.hero.title
+            )}
+          </h1>
+          <span className="hero-accent-line" />
+          <strong className="hero-line">{t.hero.line}</strong>
           <p>{t.hero.text}</p>
           <div className="hero-actions">
             <button className="primary-btn" onClick={() => navigate(routes.request)}>
-              {t.hero.primary}
-              <Send size={18} />
-            </button>
-            <button className="text-btn" onClick={() => navigate(routes.projects)}>
-              {t.hero.secondary}
+              {lang === "de" ? "Anfrage starten" : "Start request"}
               <ArrowRight size={18} />
             </button>
-          </div>
-          <div className="hero-stats" aria-label="Schwerpunkte">
-            {t.hero.stats.map((item) => (
-              <span key={item}>
-                <strong>{item}</strong>
-                <small>{lang === "de" ? "nach Mass" : "made to fit"}</small>
-              </span>
-            ))}
+            <button className="text-btn" onClick={() => navigate(routes.projects)}>
+              {lang === "de" ? "Projekte ansehen" : "View projects"}
+              <ArrowRight size={18} />
+            </button>
           </div>
         </div>
         <div className="hero-stage">
           <div className="hero-media">
             <img src="/projects/balkon-gelaender.webp" alt="" />
           </div>
-          <div className="hero-inset hero-inset-top">
-            <img src="/projects/metall-holz-tisch.webp" alt="" />
+          <div className="hero-badge">
+            <strong>{lang === "de" ? "Handwerk aus Seeheim" : "Craft from Seeheim"}</strong>
+            <span>{lang === "de" ? "persönlich" : "personal"}</span>
           </div>
-          <div className="hero-inset hero-inset-bottom">
-            <img src="/projects/leuchtobjekt.webp" alt="" />
-          </div>
-          <div className="hero-note">
-            <span>01</span>
-            <strong>{lang === "de" ? "Aussenanlagen und Gelaender" : "Exterior structures and railings"}</strong>
-          </div>
-          <div className="technical-plate" aria-hidden="true">
-            <span>CAD</span>
-            <i />
-            <b>R 02</b>
-            <small>1:20</small>
+          <div className="quick-request-card">
+            <strong>{lang === "de" ? "Ihr Projekt. Unsere Lösung." : "Your project. A practical solution."}</strong>
+            <p>{lang === "de" ? "Kurz beschreiben - ich melde mich schnellstmöglich." : "Describe it briefly and I will get back to you."}</p>
+            <input readOnly placeholder={lang === "de" ? "Ihr Name" : "Your name"} />
+            <input readOnly placeholder={lang === "de" ? "Telefon oder E-Mail" : "Phone or email"} />
+            <button onClick={() => navigate(routes.request)}>
+              {lang === "de" ? "Anfrage starten" : "Start request"}
+              <ArrowRight size={16} />
+            </button>
+            <a href={`https://wa.me/${brand.whatsapp}`}>
+              <MessageCircle size={16} />
+              WhatsApp / {brand.phone}
+            </a>
           </div>
         </div>
       </section>
 
-      <section className="material-ribbon" aria-label="Materialien und Schwerpunkte">
-        {materials.map((item) => (
-          <span key={item}>{item}</span>
+      <section className="service-image-strip" aria-label={t.sections.services}>
+        {serviceTiles.map((tile) => (
+          <article className={tile.generated ? "generated-tile" : undefined} key={tile.de}>
+            <img src={tile.image} alt="" />
+            <span>{tile[lang]}</span>
+          </article>
         ))}
       </section>
 
-      <section className="proof-strip" aria-label="Highlights">
+      <section className="proof-strip" id="leistungen" aria-label="Highlights">
         {proofPoints.map((item) => {
           const Icon = item.icon;
           return (
@@ -247,6 +261,22 @@ function HomePage({ lang, navigate }: { lang: Lang; navigate: (path: string) => 
         </div>
       </section>
 
+      <section className="planning-section" id="planung-cad">
+        <div className="planning-copy">
+          <span className="eyebrow">{t.sections.planning}</span>
+          <h2>{lang === "de" ? "Technische Planung, CAD und funktionale Prototypen." : "Technical planning, CAD and functional prototypes."}</h2>
+          <p>
+            {lang === "de"
+              ? "Für Sonderanfertigungen kann ich Ideen in Skizzen, CAD-Modelle, technische Zeichnungen und einfache Funktionsprototypen übersetzen. Embedded-Systeme und Elektronik bleiben als Spezialfähigkeit sichtbar, bis echte Beispielarbeiten ergänzt werden."
+              : "For custom work, I can translate ideas into sketches, CAD models, technical drawings and simple functional prototypes. Embedded systems and electronics remain visible as a specialist capability until real examples are added."}
+          </p>
+        </div>
+        <div className="planning-media">
+          <img src="/generated/cad-railing-placeholder.webp" alt="" />
+          <img src="/generated/embedded-prototype-placeholder.webp" alt="" />
+        </div>
+      </section>
+
       <section className="split-section">
         <div className="sticky-intro">
           <SectionIntro
@@ -273,7 +303,7 @@ function HomePage({ lang, navigate }: { lang: Lang; navigate: (path: string) => 
       </section>
 
       <section className="process-section">
-        <SectionIntro title={t.sections.process} text={lang === "de" ? "Strukturiert genug fuer komplexe Details, pragmatisch genug fuer schnelle Loesungen." : "Structured enough for complex details, pragmatic enough for fast solutions."} />
+        <SectionIntro title={t.sections.process} text={lang === "de" ? "Strukturiert genug für komplexe Details, pragmatisch genug für schnelle Lösungen." : "Structured enough for complex details, pragmatic enough for fast solutions."} />
         <div className="process-grid">
           {t.process.map(([step, title, text]) => (
             <article key={step}>
@@ -322,10 +352,10 @@ function ProjectsPage({ lang, navigate }: { lang: Lang; navigate: (path: string)
     <section className="page-shell">
       <PageHero
         eyebrow={t.sections.projects}
-        title={lang === "de" ? "Metallbau, Moebel, Objekte und Werkstattpraezision." : "Metalwork, furniture, objects and workshop precision."}
+        title={lang === "de" ? "Metallbau, Möbel, Objekte und Werkstattpräzision." : "Metalwork, furniture, objects and workshop precision."}
         text={
           lang === "de"
-            ? "Die Galerie nutzt aktuell Ihre erste Bildauswahl. Final sollten wir die besten Bilder sortieren, beschriften und fuer SEO umbenennen."
+            ? "Die Galerie nutzt aktuell Ihre erste Bildauswahl. Final sollten wir die besten Bilder sortieren, beschriften und für SEO umbenennen."
             : "The gallery currently uses the first image selection. Before launch, the strongest images should be sorted, captioned and renamed for SEO."
         }
       />
@@ -379,12 +409,18 @@ function RequestPage({ lang }: { lang: Lang }) {
           <Phone size={18} />
           {brand.phone}
         </a>
-        <a href={`mailto:${brand.email}`}>
-          <Mail size={18} />
-          {brand.email}
+        <a href={`https://wa.me/${brand.whatsapp}`}>
+          <MessageCircle size={18} />
+          WhatsApp
         </a>
+        {brand.email && (
+          <a href={`mailto:${brand.email}`}>
+            <Mail size={18} />
+            {brand.email}
+          </a>
+        )}
         <p>{t.contactHours}</p>
-        <p>{brand.location}</p>
+        <p>{lang === "de" ? "Sitz in Seeheim, Projekte nach Absprache." : "Based in Seeheim, projects by agreement."}</p>
       </aside>
       <form className="request-form" onSubmit={submit}>
         <div className="form-row">
@@ -465,7 +501,7 @@ function AboutPage({ lang, navigate }: { lang: Lang; navigate: (path: string) =>
         title={brand.owner}
         text={
           lang === "de"
-            ? "Metallbaupraxis, CAD, Elektrotechnik und Aerospace Engineering treffen auf handwerkliche Umsetzung fuer reale Projekte."
+            ? "Metallbaupraxis, CAD, Elektrotechnik und Aerospace Engineering treffen auf handwerkliche Umsetzung für reale Projekte."
             : "Hands-on metalwork, CAD, electrical engineering and aerospace engineering meet practical execution for real projects."
         }
       />
@@ -475,15 +511,15 @@ function AboutPage({ lang, navigate }: { lang: Lang; navigate: (path: string) =>
           <span>{lang === "de" ? "Portrait oder Werkstattbild" : "Portrait or workshop image"}</span>
         </div>
         <div className="about-copy">
-          <h2>{lang === "de" ? "Praezision mit breitem technischem Hintergrund." : "Precision with a broad technical background."}</h2>
+          <h2>{lang === "de" ? "Präzision mit breitem technischem Hintergrund." : "Precision with a broad technical background."}</h2>
           <p>
             {lang === "de"
-              ? "Ich bin in Seeheim verwurzelt und habe praktische Metallbauerfahrung in einer lokalen Werkstatt gesammelt. Dazu kommen internationale Stationen in den Niederlanden und Schweden sowie ein technischer Hintergrund in Elektrotechnik, CAD, Prototyping und Aerospace Engineering."
+              ? "Ich bin in Seeheim verwurzelt und habe praktische Metallbauerfahrung gesammelt, unter anderem bei Metallbau Wendt. Dazu kommen internationale Stationen in den Niederlanden und Schweden sowie ein technischer Hintergrund in Elektrotechnik, CAD, Prototyping und Aerospace Engineering."
               : "I am rooted in Seeheim and gained hands-on metalworking experience in a local workshop. That is combined with international experience in the Netherlands and Sweden and a technical background in electrical engineering, CAD, prototyping and aerospace engineering."}
           </p>
           <p>
             {lang === "de"
-              ? "Auf der Website soll das nicht wie ein Lebenslauf wirken. Wichtig ist: Wenn ein Projekt unklar, ungewoehnlich oder technisch anspruchsvoll ist, kann ich es strukturiert planen und praktisch umsetzen."
+              ? "Wichtig ist: Wenn ein Projekt unklar, ungewöhnlich oder technisch anspruchsvoll ist, kann ich es strukturiert planen und praktisch umsetzen. Jedes Vorhaben wird individuell besprochen."
               : "On the website this should not feel like a CV. The important point is: when a project is unclear, unusual or technically demanding, I can plan it clearly and build it practically."}
           </p>
           <button className="primary-btn" onClick={() => navigate(routes.request)}>
@@ -593,7 +629,7 @@ function ProjectCard({ project, lang }: { project: (typeof projects)[number]; la
 function MissingImages({ lang }: { lang: Lang }) {
   return (
     <section className="missing-section">
-      <h2>{lang === "de" ? "Bildplaetze fuer die finale Version" : "Image slots for the final version"}</h2>
+      <h2>{lang === "de" ? "Bildplätze für die finale Version" : "Image slots for the final version"}</h2>
       <div className="missing-grid">
         {missingImageSlots.map((slot) => (
           <div className="missing-card" key={slot.de}>

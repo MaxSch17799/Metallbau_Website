@@ -3,8 +3,8 @@ import {
   BriefcaseBusiness,
   Clock,
   DraftingCompass,
+  Cpu,
   Hammer,
-  Lightbulb,
   MapPin,
   PenTool,
   Ruler,
@@ -16,20 +16,20 @@ import {
 export type Lang = "de" | "en";
 
 export const brand = {
-  // Provisional public name. Change here once the final company name is chosen.
   name: "Metallbau Schimmel",
   shortName: "Schimmel",
   owner: "Maximilian Schimmel",
   phone: "+49 176 98472569",
-  email: "metallbau.schimmel@gmail.com",
-  location: "Seeheim, Deutschland",
+  whatsapp: "4917698472569",
+  email: "",
+  location: "Sitz in Seeheim",
 };
 
 export const routes = {
   home: "/",
   projects: "/projekte",
   request: "/anfrage",
-  about: "/ueber-mich",
+  about: "/profil",
   ideas: "/ideen-generator",
   legal: "/impressum",
   privacy: "/datenschutz",
@@ -38,45 +38,50 @@ export const routes = {
 export const copy = {
   de: {
     nav: {
+      services: "Leistungen",
       projects: "Projekte",
       request: "Anfrage",
-      about: "Ueber mich",
+      about: "Über mich",
+      planning: "Planung & CAD",
+      contact: "Kontakt",
       call: "Anrufen",
     },
     hero: {
       kicker: "Metallbau aus Seeheim",
-      title: "Metall & Holz nach Mass.",
+      title: "Sonderanfertigungen aus Metall und Holz.",
       text:
-        "Sonderanfertigungen fuer Moebel, Tore, Treppen, Balkone, Reparaturen und technische Planung - praezise gefertigt, sauber montiert und persoenlich abgestimmt.",
+        "Individuelle Metallarbeiten für innen und außen - präzise geplant, sauber gefertigt und persönlich abgestimmt.",
       primary: "Projekt anfragen",
       secondary: "Arbeiten ansehen",
-      stats: ["Metall & Holz", "CAD-Planung", "Innen & Aussen"],
+      stats: ["Metall & Holz", "CAD-Planung", "Innen & Außen"],
+      line: "Planung. Fertigung. Montage.",
     },
     sections: {
       services: "Leistungen",
       servicesText: "Von der ersten Idee bis zur fertigen Konstruktion.",
-      featured: "Ausgewaehlte Arbeiten",
+      featured: "Ausgewählte Arbeiten",
       process: "Ablauf",
       about: "Direkt vom Macher",
       request: "Anfrage stellen",
       contact: "Kontakt",
-      projects: "Projekte & Faehigkeiten",
+      projects: "Projekte & Fähigkeiten",
+      planning: "Planung, CAD & Embedded",
       soon: "Coming soon",
     },
     serviceCta: "Anfragen",
     process: [
-      ["01", "Beratung", "Ziel, Ort, Funktion und Stil werden geklaert."],
+      ["01", "Beratung", "Ziel, Ort, Funktion und Stil werden geklärt."],
       ["02", "Planung", "Bei Bedarf mit CAD, Skizzen und technischen Details."],
       ["03", "Fertigung", "Metall, Holz und Zukaufteile werden passend umgesetzt."],
       ["04", "Montage", "Vor Ort montiert, geliefert oder versendet nach Absprache."],
     ],
     aboutTeaser:
-      "Ich verbinde praktische Metallbauerfahrung mit CAD, Elektrotechnik und Engineering. Dadurch kann ich nicht nur schweissen und bauen, sondern auch unklare Ideen in belastbare Konzepte uebersetzen.",
+      "Ich verbinde praktische Metallbauerfahrung, unter anderem aus meiner Zeit bei Metallbau Wendt, mit CAD, Elektrotechnik und Engineering. Dadurch kann ich nicht nur schweißen und bauen, sondern auch unklare Ideen in belastbare Konzepte übersetzen.",
     requestTeaser:
-      "Beschreiben Sie Ihr Vorhaben und fuegen Sie Fotos, Skizzen oder Masse hinzu. Ich melde mich mit einer realistischen Einschaetzung.",
+      "Beschreiben Sie Ihr Vorhaben und fügen Sie Fotos, Skizzen oder Maße hinzu. Ich melde mich mit einer realistischen Einschätzung.",
     contactHours: "Mo-Fr 08:00-17:00",
     flexibleHours:
-      "Sollten Sie uns ausserhalb dieser Zeiten erreichen wollen, melden Sie sich gern trotzdem. Wenn es passt, nehmen wir Ihren Anruf entgegen oder rufen zeitnah zurueck.",
+      "Sollten Sie mich außerhalb dieser Zeiten erreichen wollen, melden Sie sich gern trotzdem. Wenn es passt, nehme ich Ihren Anruf entgegen oder rufe zeitnah zurück.",
     form: {
       name: "Name",
       email: "E-Mail",
@@ -87,28 +92,31 @@ export const copy = {
       files: "Bilder oder Skizzen",
       submit: "Anfrage vorbereiten",
       consent: "Ich bin mit der Kontaktaufnahme zu meiner Anfrage einverstanden.",
-      success: "Anfrage vorbereitet. Der echte Versand und die Datenbank-Anbindung folgen im naechsten Schritt.",
+      success: "Anfrage vorbereitet. Der echte Versand und die Datenbank-Anbindung folgen im nächsten Schritt.",
     },
     ideas: {
       teaser: "Ideen-Generator",
       password: "Passwort",
-      unlock: "Oeffnen",
-      wrong: "Passwort pruefen",
+      unlock: "Öffnen",
+      wrong: "Passwort prüfen",
     },
     legal: {
       title: "Impressum",
-      text: "Die rechtlichen Angaben werden ergaenzt, sobald Name, Anschrift und weitere Pflichtangaben final feststehen.",
+      text: "Die rechtlichen Angaben werden ergänzt, sobald die Pflichtangaben final feststehen. Bis dahin werden keine falschen oder unvollständigen Adress- oder Unternehmensdaten veröffentlicht.",
     },
     privacy: {
       title: "Datenschutz",
-      text: "Die Datenschutzerklaerung wird vor dem Livegang finalisiert, besonders fuer Kontaktformular, Datei-Uploads und spaetere KI-Funktionen.",
+      text: "Die Datenschutzerklärung wird vor dem Livegang finalisiert, besonders für Kontaktformular, Datei-Uploads, Datenbank-Speicherung und spätere KI-Funktionen.",
     },
   },
   en: {
     nav: {
+      services: "Services",
       projects: "Projects",
       request: "Request",
       about: "About",
+      planning: "Planning & CAD",
+      contact: "Contact",
       call: "Call",
     },
     hero: {
@@ -119,6 +127,7 @@ export const copy = {
       primary: "Start a request",
       secondary: "View work",
       stats: ["Metal & wood", "CAD planning", "Indoor & outdoor"],
+      line: "Planning. Fabrication. Installation.",
     },
     sections: {
       services: "Services",
@@ -129,6 +138,7 @@ export const copy = {
       request: "Send a request",
       contact: "Contact",
       projects: "Projects & skills",
+      planning: "Planning, CAD & embedded",
       soon: "Coming soon",
     },
     serviceCta: "Request",
@@ -177,17 +187,17 @@ export const copy = {
 export const services = [
   {
     icon: Hammer,
-    de: ["Metallbau", "Tore, Treppen, Balkone, Gelaender und individuelle Konstruktionen."],
+    de: ["Metallbau", "Tore, Treppen, Balkone, Geländer und individuelle Konstruktionen."],
     en: ["Metalwork", "Gates, stairs, balconies, railings and custom structures."],
   },
   {
     icon: Ruler,
-    de: ["Moebel & Innenraum", "Tische, Regale, Gestelle und Einzelstuecke aus Metall und Holz."],
+    de: ["Möbel & Interieur", "Tische, Regale, Gestelle und Einzelstücke aus Metall und Holz."],
     en: ["Furniture & interiors", "Tables, shelves, frames and one-off pieces in metal and wood."],
   },
   {
     icon: Wrench,
-    de: ["Schweissen & Reparatur", "Reparaturen, Anpassungen und praktische Loesungen fuer Metallteile."],
+    de: ["Schweißen & Reparatur", "Reparaturen, Anpassungen und praktische Lösungen für Metallteile."],
     en: ["Welding & repair", "Repairs, adjustments and practical solutions for metal parts."],
   },
   {
@@ -196,60 +206,90 @@ export const services = [
     en: ["CAD & planning", "Sketches, technical drawings and structured preparation."],
   },
   {
-    icon: Lightbulb,
-    de: ["Licht & Objekte", "Gestalterische Einzelstuecke mit Material, Licht und Funktion."],
-    en: ["Lighting & objects", "Designed one-off pieces with material, light and function."],
+    icon: Cpu,
+    de: ["Embedded & Prototyping", "Platzhalter für Elektronik, Sensorik und funktionale Sonderlösungen."],
+    en: ["Embedded & prototyping", "Placeholder for electronics, sensors and functional custom solutions."],
   },
   {
     icon: PenTool,
-    de: ["Sonderloesungen", "Breite Engineering-Erfahrung fuer Projekte ausserhalb des Standards."],
+    de: ["Sonderlösungen", "Breite Engineering-Erfahrung für Projekte außerhalb des Standards."],
     en: ["Custom solutions", "Broad engineering experience for projects outside the standard range."],
   },
 ];
 
 export const proofPoints = [
   { icon: MapPin, de: "Basis in Seeheim", en: "Based in Seeheim" },
-  { icon: ShieldCheck, de: "Praezise Fertigung", en: "Precise fabrication" },
+  { icon: ShieldCheck, de: "Präzise Fertigung", en: "Precise fabrication" },
   { icon: BriefcaseBusiness, de: "Metallbau-Erfahrung", en: "Metalworking experience" },
   { icon: BadgeCheck, de: "Engineering-Hintergrund", en: "Engineering background" },
   { icon: Clock, de: "Mo-Fr erreichbar", en: "Available Mon-Fri" },
-  { icon: Sparkles, de: "Innen & Aussen", en: "Indoor & outdoor" },
+  { icon: Sparkles, de: "Innen & Außen", en: "Indoor & outdoor" },
+];
+
+export const serviceTiles = [
+  {
+    image: "/projects/aussentreppe-gelaender.webp",
+    de: "Treppen & Geländer",
+    en: "Stairs & railings",
+  },
+  {
+    image: "/projects/balkon-gelaender.webp",
+    de: "Balkone & Anbauten",
+    en: "Balconies & structures",
+  },
+  {
+    image: "/projects/metall-holz-tisch.webp",
+    de: "Möbel & Interieur",
+    en: "Furniture & interiors",
+  },
+  {
+    image: "/generated/welding-placeholder.webp",
+    de: "Schweißarbeiten",
+    en: "Welding work",
+    generated: true,
+  },
+  {
+    image: "/generated/embedded-prototype-placeholder.webp",
+    de: "CAD & Embedded",
+    en: "CAD & embedded",
+    generated: true,
+  },
 ];
 
 export const projects = [
   {
     image: "/projects/balkon-gelaender.webp",
-    category: { de: "Aussenbereich", en: "Exterior" },
-    title: { de: "Balkon- und Gelaenderanlage", en: "Balcony and railing system" },
+    category: { de: "Außenbereich", en: "Exterior" },
+    title: { de: "Balkon- und Geländeranlage", en: "Balcony and railing system" },
     text: {
-      de: "Metallkonstruktion fuer ein Wohnhaus mit klarer Linienfuehrung.",
+      de: "Metallkonstruktion für ein Wohnhaus mit klarer Linienführung.",
       en: "Metal construction for a residential building with clean lines.",
     },
   },
   {
     image: "/projects/metall-holz-schreibtisch.webp",
-    category: { de: "Moebel", en: "Furniture" },
+    category: { de: "Möbel", en: "Furniture" },
     title: { de: "Schreibtisch aus Metall und Holz", en: "Metal and wood desk" },
     text: {
-      de: "Massiver Rahmen mit heller Holzplatte fuer einen funktionalen Arbeitsplatz.",
+      de: "Massiver Rahmen mit heller Holzplatte für einen funktionalen Arbeitsplatz.",
       en: "Solid frame with a light wood top for a functional workspace.",
     },
   },
   {
     image: "/projects/metall-holz-regal.webp",
     category: { de: "Innenraum", en: "Interior" },
-    title: { de: "Regal- und Bettloesung", en: "Shelf and bed solution" },
+    title: { de: "Regal- und Bettlösung", en: "Shelf and bed solution" },
     text: {
-      de: "Kombination aus Stahlrahmen und Holzflaechen fuer den Innenraum.",
+      de: "Kombination aus Stahlrahmen und Holzflächen für den Innenraum.",
       en: "Combination of steel frame and wood surfaces for an interior space.",
     },
   },
   {
     image: "/projects/aussentreppe-gelaender.webp",
-    category: { de: "Aussenbereich", en: "Exterior" },
-    title: { de: "Aussentreppe mit Gelaender", en: "Outdoor stairs with railing" },
+    category: { de: "Außenbereich", en: "Exterior" },
+    title: { de: "Außentreppe mit Geländer", en: "Outdoor stairs with railing" },
     text: {
-      de: "Robuste Treppen- und Gelaenderkonstruktion fuer den Alltag.",
+      de: "Robuste Treppen- und Geländerkonstruktion für den Alltag.",
       en: "Robust stair and railing construction for everyday use.",
     },
   },
@@ -258,7 +298,7 @@ export const projects = [
     category: { de: "Designobjekt", en: "Design object" },
     title: { de: "Leuchtobjekt", en: "Light object" },
     text: {
-      de: "Einzelstueck mit Metallform, Licht und dekorativer Wirkung.",
+      de: "Einzelstück mit Metallform, Licht und dekorativer Wirkung.",
       en: "One-off piece combining metal form, light and decorative effect.",
     },
   },
@@ -267,7 +307,7 @@ export const projects = [
     category: { de: "Fertigung", en: "Fabrication" },
     title: { de: "Tor in Fertigung", en: "Gate in fabrication" },
     text: {
-      de: "Werkstattarbeit mit Rahmen, Gitterstruktur und Beschlaegen.",
+      de: "Werkstattarbeit mit Rahmen, Gitterstruktur und Beschlägen.",
       en: "Workshop fabrication with frame, grid structure and fittings.",
     },
   },
@@ -276,7 +316,7 @@ export const projects = [
     category: { de: "Objekt", en: "Object" },
     title: { de: "Metallblume", en: "Metal flower" },
     text: {
-      de: "Dekoratives Einzelstueck mit geschweissten und geformten Details.",
+      de: "Dekoratives Einzelstück mit geschweißten und geformten Details.",
       en: "Decorative one-off piece with welded and formed details.",
     },
   },
@@ -293,7 +333,7 @@ export const projects = [
 
 export const missingImageSlots = [
   {
-    de: "Portraitfoto fuer die Ueber-mich-Seite",
+    de: "Portraitfoto für die Über-mich-Seite",
     en: "Portrait photo for the About page",
   },
   {
@@ -301,15 +341,15 @@ export const missingImageSlots = [
     en: "Logo or wordmark",
   },
   {
-    de: "Sauber fotografierte Moebel in fertigen Raeumen",
+    de: "Sauber fotografierte Möbel in fertigen Räumen",
     en: "Clean photos of finished furniture in finished rooms",
   },
   {
-    de: "Detailfotos von Schweissnaehten, Oberflaechen und Material",
+    de: "Detailfotos von Schweißnähten, Oberflächen und Material",
     en: "Detail photos of welds, surfaces and material",
   },
   {
-    de: "CAD- oder technische Zeichnungsbeispiele",
+    de: "CAD-, Embedded- oder technische Zeichnungsbeispiele",
     en: "CAD or technical drawing examples",
   },
 ];

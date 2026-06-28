@@ -84,7 +84,7 @@ Official docs checked for planning:
 - Email: use a new free Gmail address for v1, forwarding to the main Gmail. No custom domain email yet.
 - Call availability:
   - Monday to Friday, 08:00-17:00.
-  - Also invite people to try outside those times in a professional way, for example: "Sollten Sie uns ausserhalb dieser Zeiten erreichen wollen, melden Sie sich gern trotzdem - wenn es passt, nehmen wir Ihren Anruf entgegen oder rufen zeitnah zurueck."
+  - Also invite people to try outside those times in a professional way, for example: "Sollten Sie uns außerhalb dieser Zeiten erreichen wollen, melden Sie sich gern trotzdem - wenn es passt, nehmen wir Ihren Anruf entgegen oder rufen zeitnah zurück."
 - Tone: formal German, `Sie`.
 - AI generator visibility:
   - Hide as a normal public feature for now.
@@ -112,7 +112,7 @@ Core service direction:
 
 Background to use carefully:
 
-- Former welder and metal construction worker at Metallbau Wendt in Alsbach-Haehnlein.
+- Former welder and metal construction worker at Metallbau Wendt in Alsbach-Hähnlein.
 - M.Sc. electrical engineering/electric propulsion background.
 - Aerospace engineering work and practical prototyping/test-bed experience.
 - International experience in the Netherlands and Sweden.
@@ -125,7 +125,7 @@ Recommended public wording direction:
 
 ## Business Name Ideas
 
-SEO-friendly names should include `Metallbau`, `Metall`, `Metalltechnik`, `Seeheim`, `Design`, `Moebel`, or `Manufaktur`. The legal Impressum can still show `Maximilian Schimmel` even if the public-facing brand is different, subject to German business naming rules.
+SEO-friendly names should include `Metallbau`, `Metall`, `Metalltechnik`, `Seeheim`, `Design`, `Möbel`, or `Manufaktur`. The legal Impressum can still show `Maximilian Schimmel` even if the public-facing brand is different, subject to German business naming rules.
 
 Stronger options:
 
@@ -136,7 +136,7 @@ Stronger options:
 5. `Metallwerk Seeheim`
 6. `Schimmel Metall & Holz`
 7. `Metallmanufaktur Schimmel`
-8. `Schimmel Werkstatt fuer Metall & Holz`
+8. `Schimmel Werkstatt für Metall & Holz`
 9. `Seeheim Metalltechnik`
 10. `Maximilian Schimmel - Metallbau & Design`
 
@@ -172,14 +172,14 @@ Updated naming shortlist after choosing the fancy modern direction:
    - Most direct and legally straightforward, but less brand-like.
 7. `Seeheimer Metallbau & Design`
    - Local and SEO-friendly, less personal.
-8. `Schimmel Werkstatt fuer Metall & Holz`
+8. `Schimmel Werkstatt für Metall & Holz`
    - Personal craft feel, but a bit longer and more workshop-like.
 9. `MS Metallbau & Design`
    - Clean and compact, but less SEO-clear and less memorable.
 10. `Schimmel Objektbau`
     - Stylish, but too vague unless paired with a clear subtitle such as `Metall, Holz und Sonderanfertigungen`.
 
-Selected provisional website name:
+Selected website name for now:
 
 - `Metallbau Schimmel`
 
@@ -323,7 +323,7 @@ Purpose: show past work, range, skills, and credibility.
 
 Possible features:
 
-- Project gallery with filters such as Gelaender, Tore, Treppen, Sonderanfertigungen, Reparaturen, Edelstahl, Stahl, Aluminium.
+- Project gallery with filters such as Geländer, Tore, Treppen, Sonderanfertigungen, Reparaturen, Edelstahl, Stahl, Aluminium.
 - Before/after pairs if available.
 - Detail modals or project pages with captions, materials, location, challenge, solution.
 - Skill highlights: welding, fabrication, restoration, installation, custom fitting, repair.
@@ -353,7 +353,7 @@ Backend behavior:
 - Send notification to your email via an email service or another notification method.
 - Return a clean confirmation state to the user.
 
-### `/ueber-mich`
+### `/profil`
 
 Purpose: create trust and show the person behind the work.
 
@@ -562,7 +562,7 @@ Request form:
 Legal/privacy:
 
 - Impressum details.
-- Datenschutzerklaerung text or permission to draft a placeholder.
+- Datenschutzerklärung text or permission to draft a placeholder.
 - VAT ID / tax details if applicable.
 - Trade registration or chamber details if applicable.
 - Cookie/analytics preference.
@@ -624,18 +624,27 @@ Questions already answered or partially answered:
 5. Contact requests/interactions: store in database.
 6. AI generator: hidden/coming-soon preview with password `MAX`.
 7. Preferred style: options 1, 3, and 5, not 2 or 4.
+8. Public name: `Metallbau Schimmel`.
+9. Domain: use the free Cloudflare Pages domain for now.
+10. Public Gmail: still open.
+11. WhatsApp/contact under the listed phone number: yes.
+12. CAD and embedded systems should be listed, with placeholder examples for now.
+13. Woodwork should mainly be framed as metal/wood combinations.
+14. Impressum/address: do not list a physical address yet.
+15. Business state: existing Gewerbe, but site should avoid over-specific claims, prices, legal promises, certifications, or anything that implies a larger company than exists.
+16. Certifications: do not mention welding certificate/training claims for now.
+17. On-site work: every project should be framed as individual and by discussion, not automated ordering.
+18. Mention Metallbau Wendt only on the About page as background experience.
+19. Customer focus: mostly private owners/homeowners.
+20. Contact form target: store in D1 and send email later.
+21. Lead image: keep the large house/balcony image.
+22. Visual direction: move closer to the attached reference layout with a clean large header, diagonal hero photo, service image strip, icon/service row, and request panel.
 
 Please answer these next:
 
-1. Which public business name do you prefer from the list, or should I generate more?
-2. Do you already own a domain, or should we search for available `.de` domains?
-3. Which free Gmail address should be created and shown publicly?
-4. Should WhatsApp be shown as a contact option?
-5. Should the website say you perform electrical/embedded work publicly, or only mention it as part of complex engineering/custom builds?
-6. Do you want to advertise woodwork as a full service, or only as metal/wood furniture combinations?
-7. What legal address should be used in the Impressum?
-8. Are you Kleinunternehmer, VAT registered, or should the website avoid price/VAT wording for now?
-9. Do you have insurance/certifications/qualifications relevant to welding, electrical work, or installations?
-10. Should customers be able to request on-site installation directly, or should the site frame every job as "nach Absprache"?
-11. Should project images show work from your time at Metallbau Wendt, and if yes, do you have permission/comfort using them publicly?
-12. Should the website focus more on private homeowners, interior designers/architects, or commercial clients?
+1. Which free Gmail address should be created and shown publicly?
+2. What generic Impressum wording is acceptable until final legal details are ready?
+3. Which final photos should replace generated placeholders for CAD, embedded systems, welding, and detail shots?
+4. Should "Embedded & Prototyping" be presented as a customer-facing service or mainly as a special capability for unusual custom projects?
+5. Are the current example photos all safe to show publicly as your own current work, not employer-owned/client-restricted images?
+6. Do you want a real logo/wordmark and portrait photo, or should the current minimal placeholder branding stay for now?
