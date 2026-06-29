@@ -310,7 +310,7 @@ function HomePage({ lang, navigate }: { lang: Lang; navigate: (path: string, tar
       </section>
 
       <section className="section-band capabilities-band">
-        <SectionIntro title={lang === "de" ? "Überblick" : "Overview"} text={lang === "de" ? "Schwerpunkte, die sich je nach Projekt kombinieren lassen." : "Focus areas that can be combined depending on the project."} />
+        <SectionIntro title={t.nav.services} text={lang === "de" ? "Schwerpunkte, die sich je nach Projekt kombinieren lassen." : "Focus areas that can be combined depending on the project."} />
         <div className="service-grid">
           {services.map((service, index) => {
             const Icon = service.icon;
@@ -349,7 +349,7 @@ function HomePage({ lang, navigate }: { lang: Lang; navigate: (path: string, tar
           <span>{lang === "de" ? "Portrait / Werkstattfoto" : "Portrait / workshop photo"}</span>
         </div>
         <div>
-          <span className="eyebrow">{t.sections.about}</span>
+          <span className="eyebrow">{t.nav.about}</span>
           <h2>{brand.owner}</h2>
           <p>{t.aboutTeaser}</p>
           <button className="text-btn" onClick={() => navigate(routes.about)}>
@@ -362,7 +362,7 @@ function HomePage({ lang, navigate }: { lang: Lang; navigate: (path: string, tar
       <section className="contact-home-section" id="kontakt-home">
         <div className="request-band">
           <div>
-            <span className="eyebrow">{t.sections.request}</span>
+            <span className="eyebrow">{t.nav.contact}</span>
             <h2>{t.requestTeaser}</h2>
           </div>
           <button className="primary-btn" onClick={() => navigate(routes.request)}>
@@ -722,7 +722,7 @@ function ProjectsPage({ lang, navigate }: { lang: Lang; navigate: (path: string)
   return (
     <section className="page-shell">
       <PageHero
-        eyebrow={t.sections.projects}
+        eyebrow={t.nav.projects}
         title={lang === "de" ? "Metallbau, Möbel, Objekte und Werkstattpräzision." : "Metalwork, furniture, objects and workshop precision."}
         text={
           lang === "de"
