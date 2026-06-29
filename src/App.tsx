@@ -54,6 +54,8 @@ const projectTypes = [
   "Sonderanfertigung",
 ];
 
+type RequestStatus = "idle" | "submitting" | "success" | "error";
+
 export function App() {
   const [lang, setLang] = useState<Lang>(() => {
     const stored = window.localStorage.getItem("lang");
@@ -152,6 +154,11 @@ function Header({
   activeSection: HomeSection | null;
 }) {
   const [open, setOpen] = useState(false);
+  const [expandedMenu, setExpandedMenu] = useState<Record<string, boolean>>({
+    services: false,
+    projects: false,
+    legal: false,
+  });
   const t = copy[lang];
   const nav = [
     { section: "leistungen", label: t.nav.services, subPath: routes.home },
@@ -159,27 +166,39 @@ function Header({
     { section: "ueber-mich-home", label: t.nav.about, subPath: routes.about },
     { section: "kontakt-home", label: t.nav.contact, subPath: routes.request },
   ] as const;
-  const subpageGroups = [
+  const subpageItems = [
     {
-      title: lang === "de" ? "Seiten" : "Pages",
-      links: [
-        { label: t.nav.projects as string, path: routes.projects },
-        { label: t.nav.request as string, path: routes.request },
-        { label: t.nav.about as string, path: routes.about },
-        { label: t.ideas.teaser as string, path: routes.ideas },
-      ],
+      id: "services",
+      label: t.nav.services as string,
+      path: routes.home,
+      targetId: "leistungen" as HomeSection,
+      children: serviceShowcases.map((item) => ({ label: item.title[lang], path: servicePath(item.slug) })),
     },
     {
-      title: t.nav.services as string,
-      links: serviceShowcases.map((item) => ({ label: item.title[lang], path: servicePath(item.slug) })),
+      id: "projects",
+      label: t.nav.projects as string,
+      path: routes.projects,
+      children: projects.map((item) => ({ label: item.title[lang], path: projectPath(item.slug) })),
     },
     {
-      title: t.nav.projects as string,
-      links: projects.map((item) => ({ label: item.title[lang], path: projectPath(item.slug) })),
+      id: "request",
+      label: t.nav.request as string,
+      path: routes.request,
     },
     {
-      title: lang === "de" ? "Rechtliches" : "Legal",
-      links: [
+      id: "about",
+      label: t.nav.about as string,
+      path: routes.about,
+    },
+    {
+      id: "ideas",
+      label: t.ideas.teaser as string,
+      path: routes.ideas,
+    },
+    {
+      id: "legal",
+      label: lang === "de" ? "Rechtliches" : "Legal",
+      children: [
         { label: t.legal.title as string, path: routes.legal },
         { label: t.privacy.title as string, path: routes.privacy },
       ],
@@ -189,6 +208,10 @@ function Header({
   const onNav = (path: string, targetId?: string) => {
     navigate(path, targetId);
     setOpen(false);
+  };
+
+  const toggleMenuItem = (id: string) => {
+    setExpandedMenu((current) => ({ ...current, [id]: !current[id] }));
   };
 
   const onSectionNav = (item: (typeof nav)[number]) => {
@@ -262,17 +285,38 @@ function Header({
       </nav>
       {open && (
         <nav className="subpage-menu-panel" aria-label={lang === "de" ? "Unterseiten" : "Subpages"}>
-          {subpageGroups.map((group) => (
-            <section key={group.title}>
-              <span>{group.title}</span>
-              <div>
-                {group.links.map((link) => (
-                  <button key={link.path} onClick={() => onNav(link.path)}>
-                    {link.label}
-                    <ChevronRight size={16} />
+          <span className="subpage-menu-kicker">{lang === "de" ? "Unterseiten" : "Subpages"}</span>
+          {subpageItems.map((item) => (
+            <section className={item.children && expandedMenu[item.id] ? "menu-branch is-expanded" : "menu-branch"} key={item.id}>
+              <div className="menu-branch-row">
+                {item.path ? (
+                  <button className="menu-branch-main" onClick={() => onNav(item.path, item.targetId)}>
+                    <span>{item.label}</span>
                   </button>
-                ))}
+                ) : (
+                  <span className="menu-branch-main menu-branch-label">{item.label}</span>
+                )}
+                {item.children && (
+                  <button
+                    className="menu-branch-toggle"
+                    onClick={() => toggleMenuItem(item.id)}
+                    aria-expanded={Boolean(expandedMenu[item.id])}
+                    aria-label={lang === "de" ? `${item.label} öffnen` : `Open ${item.label}`}
+                  >
+                    <ChevronRight size={18} />
+                  </button>
+                )}
               </div>
+              {item.children && expandedMenu[item.id] && (
+                <div className="menu-branch-children">
+                  {item.children.map((link) => (
+                    <button key={link.path} onClick={() => onNav(link.path)}>
+                      <span>{link.label}</span>
+                      <ChevronRight size={15} />
+                    </button>
+                  ))}
+                </div>
+              )}
             </section>
           ))}
         </nav>
@@ -870,26 +914,61 @@ function ProjectDetailPage({ lang, navigate, slug }: { lang: Lang; navigate: (pa
 function RequestPage({ lang }: { lang: Lang }) {
   const t = copy[lang];
   const [files, setFiles] = useState<File[]>([]);
-  const [sent, setSent] = useState(false);
+  const [status, setStatus] = useState<RequestStatus>("idle");
+  const [message, setMessage] = useState("");
   const [consent, setConsent] = useState(false);
 
   const fileSummary = useMemo(() => files.map((file) => `${file.name} (${Math.round(file.size / 1024)} KB)`), [files]);
 
-  const submit = (event: FormEvent<HTMLFormElement>) => {
+  const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const form = new FormData(event.currentTarget);
-    const payload = {
-      createdAt: new Date().toISOString(),
-      name: form.get("name"),
-      email: form.get("email"),
-      phone: form.get("phone"),
-      location: form.get("location"),
-      type: form.get("type"),
-      message: form.get("message"),
-      files: fileSummary,
-    };
-    window.localStorage.setItem("metallbau-last-request", JSON.stringify(payload));
-    setSent(true);
+    setMessage("");
+
+    if (files.length > 5 || files.some((file) => file.size > 10 * 1024 * 1024)) {
+      setStatus("error");
+      setMessage(t.form.fileLimit);
+      return;
+    }
+
+    const formElement = event.currentTarget;
+    const form = new FormData(formElement);
+    form.set("sourceLanguage", lang);
+    form.set("fileSummary", JSON.stringify(fileSummary));
+
+    setStatus("submitting");
+    try {
+      const response = await fetch("/api/request", {
+        method: "POST",
+        body: form,
+      });
+      const result = await response.json().catch(() => ({}));
+
+      if (!response.ok || !result.ok) {
+        throw new Error(result.code === "backend_not_configured" ? t.form.backendMissing : result.message || t.form.error);
+      }
+
+      window.localStorage.setItem(
+        "metallbau-last-request",
+        JSON.stringify({
+          createdAt: new Date().toISOString(),
+          requestId: result.requestId,
+          name: form.get("name"),
+          email: form.get("email"),
+          phone: form.get("phone"),
+          location: form.get("location"),
+          type: form.get("type"),
+          files: fileSummary,
+        }),
+      );
+      setStatus("success");
+      setMessage(t.form.success);
+      setFiles([]);
+      setConsent(false);
+      formElement.reset();
+    } catch (error) {
+      setStatus("error");
+      setMessage(error instanceof Error ? error.message : t.form.error);
+    }
   };
 
   return (
@@ -915,6 +994,10 @@ function RequestPage({ lang }: { lang: Lang }) {
         <p>{lang === "de" ? "Sitz in Seeheim, Projekte nach Absprache." : "Based in Seeheim, projects by agreement."}</p>
       </aside>
       <form className="request-form" onSubmit={submit}>
+        <label className="visually-hidden" aria-hidden="true">
+          Firma
+          <input name="company" tabIndex={-1} autoComplete="off" />
+        </label>
         <div className="form-row">
           <label>
             {t.form.name}
@@ -951,6 +1034,7 @@ function RequestPage({ lang }: { lang: Lang }) {
           <Upload size={22} />
           <span>{t.form.files}</span>
           <input
+            name="files"
             type="file"
             multiple
             accept="image/*,.pdf"
@@ -965,17 +1049,17 @@ function RequestPage({ lang }: { lang: Lang }) {
           </div>
         )}
         <label className="consent-line">
-          <input checked={consent} onChange={(event) => setConsent(event.currentTarget.checked)} type="checkbox" />
+          <input checked={consent} name="consent" onChange={(event) => setConsent(event.currentTarget.checked)} required type="checkbox" />
           <span>{t.form.consent}</span>
         </label>
-        <button className="primary-btn" disabled={!consent} type="submit">
-          {t.form.submit}
+        <button className="primary-btn" disabled={!consent || status === "submitting"} type="submit">
+          {status === "submitting" ? t.form.sending : t.form.submit}
           <Send size={18} />
         </button>
-        {sent && (
-          <p className="success-message">
+        {message && (
+          <p className={status === "error" ? "form-message error-message" : "form-message success-message"}>
             <CheckCircle2 size={18} />
-            {t.form.success}
+            {message}
           </p>
         )}
       </form>

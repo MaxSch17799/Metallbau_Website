@@ -2,5 +2,16 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "metallbau-schimmel",
   "compatibility_date": "2026-06-28",
-  "pages_build_output_dir": "dist"
+  "pages_build_output_dir": "dist",
+  "vars": {
+    "PUBLIC_CONTACT_EMAIL": "metallbau.schimmel@gmail.com",
+    "MAX_UPLOAD_FILES": "5",
+    "MAX_UPLOAD_BYTES": "10485760"
+  }
+
+  // Add real bindings after creating the resources in Cloudflare.
+  // Expected binding names used by functions/api/request.js:
+  // - D1 database binding: REQUESTS_DB
+  // - R2 bucket binding: REQUEST_ATTACHMENTS
+  // - Secret: TURNSTILE_SECRET_KEY
 }

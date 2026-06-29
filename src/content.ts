@@ -19,7 +19,7 @@ export const brand = {
   owner: "Maximilian Schimmel",
   phone: "+49 176 98472569",
   whatsapp: "4917698472569",
-  email: "",
+  email: "metallbau.schimmel@gmail.com",
   location: "Sitz in Seeheim",
 };
 
@@ -89,9 +89,13 @@ export const copy = {
       type: "Projektart",
       message: "Nachricht",
       files: "Bilder oder Skizzen",
-      submit: "Anfrage vorbereiten",
+      submit: "Anfrage senden",
       consent: "Ich bin mit der Kontaktaufnahme zu meiner Anfrage einverstanden.",
-      success: "Anfrage vorbereitet. Der echte Versand und die Datenbank-Anbindung folgen im nächsten Schritt.",
+      success: "Anfrage wurde übertragen. Ich melde mich schnellstmöglich.",
+      sending: "Anfrage wird übertragen...",
+      error: "Die Anfrage konnte nicht gespeichert werden. Bitte rufen Sie an oder schreiben Sie direkt per E-Mail.",
+      backendMissing: "Die Anfrage-Funktion ist vorbereitet, aber Cloudflare D1/R2 ist noch nicht fertig verbunden. Bitte nutzen Sie vorerst Telefon, WhatsApp oder E-Mail.",
+      fileLimit: "Maximal 5 Dateien mit jeweils bis zu 10 MB sind möglich.",
     },
     ideas: {
       teaser: "Ideen-Generator",
@@ -101,11 +105,13 @@ export const copy = {
     },
     legal: {
       title: "Impressum",
-      text: "Die rechtlichen Angaben werden ergänzt, sobald die Pflichtangaben final feststehen. Bis dahin werden keine falschen oder unvollständigen Adress- oder Unternehmensdaten veröffentlicht.",
+      text:
+        "Angaben nach § 5 TMG: Metallbau Schimmel, Maximilian Schimmel, Sitz in Seeheim-Jugenheim. Kontakt: +49 176 98472569, metallbau.schimmel@gmail.com. Hinweis: Eine vollständige ladungsfähige Anschrift, Umsatzsteuerangaben und weitere Pflichtangaben werden vor dem öffentlichen Launch final ergänzt.",
     },
     privacy: {
       title: "Datenschutz",
-      text: "Die Datenschutzerklärung wird vor dem Livegang finalisiert, besonders für Kontaktformular, Datei-Uploads, Datenbank-Speicherung und spätere KI-Funktionen.",
+      text:
+        "Diese Website verarbeitet Kontaktdaten, Projektbeschreibungen und hochgeladene Dateien nur zur Bearbeitung Ihrer Anfrage. Kontaktanfragen sollen in Cloudflare D1 gespeichert werden; Dateianhänge sollen in Cloudflare R2 gespeichert werden. Die Daten werden nicht verkauft und nicht für Werbung weitergegeben. Die finale Datenschutzerklärung muss vor dem Launch noch mit den tatsächlichen Impressumsdaten, Speicherfristen, Rechtsgrundlagen und Dienstleistern abgeglichen werden.",
     },
   },
   en: {
@@ -162,9 +168,13 @@ export const copy = {
       type: "Project type",
       message: "Message",
       files: "Images or sketches",
-      submit: "Prepare request",
+      submit: "Send request",
       consent: "I agree to be contacted about my request.",
-      success: "Request prepared. Real sending and database storage will be connected next.",
+      success: "Request sent. I will get back to you as soon as possible.",
+      sending: "Sending request...",
+      error: "The request could not be stored. Please call or email directly.",
+      backendMissing: "The request backend is prepared, but Cloudflare D1/R2 is not fully connected yet. Please use phone, WhatsApp or email for now.",
+      fileLimit: "Maximum 5 files, up to 10 MB each.",
     },
     ideas: {
       teaser: "Idea generator",
@@ -174,11 +184,13 @@ export const copy = {
     },
     legal: {
       title: "Legal notice",
-      text: "The legal details will be added once name, address and required business details are final.",
+      text:
+        "Legal notice under German law: Metallbau Schimmel, Maximilian Schimmel, based in Seeheim-Jugenheim. Contact: +49 176 98472569, metallbau.schimmel@gmail.com. Note: the full serviceable address, VAT/tax details and any further mandatory details still need to be finalized before public launch.",
     },
     privacy: {
       title: "Privacy",
-      text: "The privacy policy will be finalized before launch, especially for the contact form, uploads and future AI features.",
+      text:
+        "This website processes contact details, project descriptions and uploaded files only to handle your request. Contact requests are intended to be stored in Cloudflare D1; attachments are intended to be stored in Cloudflare R2. Data is not sold or shared for advertising. The final privacy policy still needs to be checked against the real legal details, retention periods, legal bases and processors before launch.",
     },
   },
 } satisfies Record<Lang, Record<string, unknown>>;

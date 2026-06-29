@@ -82,7 +82,7 @@ Official docs checked for planning:
   - Can travel for suitable on-site projects.
   - Can ship or deliver furniture and smaller fabricated items across Germany.
 - Phone: `+49 176 98472569`.
-- Email: use a new free Gmail address for v1, forwarding to the main Gmail. No custom domain email yet.
+- Email: `metallbau.schimmel@gmail.com` for v1, forwarding to the main Gmail if desired. No custom domain email yet.
 - Call availability:
   - Monday to Friday, 08:00-17:00.
   - Also invite people to try outside those times in a professional way, for example: "Sollten Sie uns außerhalb dieser Zeiten erreichen wollen, melden Sie sich gern trotzdem - wenn es passt, nehmen wir Ihren Anruf entgegen oder rufen zeitnah zurück."
@@ -207,7 +207,7 @@ Suggested free Gmail names to try:
 Important:
 
 - A free Gmail address will be less professional than `kontakt@...de`, but it keeps v1 fully free.
-- The website should display the business Gmail address, not the private Gmail.
+- The website should display `metallbau.schimmel@gmail.com`, not the private Gmail.
 - The contact form backend can send notifications to either the new business Gmail or directly to the private Gmail, but public-facing replies should come from the business Gmail.
 
 Later, when a domain is available:
@@ -669,21 +669,37 @@ Requested on 2026-06-29, later pass:
 
 Recommended next order:
 
-1. Finalize public identity details: free Gmail address, final legal owner/imprint wording, whether WhatsApp should be advertised, and any missing service-area wording.
+1. Finalize public identity/legal details: final Impressum address, tax/VAT wording, whether WhatsApp should be advertised, and any missing service-area wording.
 2. Replace placeholders with final approved assets: logo/wordmark if wanted, portrait, CAD/embedded examples, welding/detail shots, and final project gallery photos.
-3. Wire the request form backend: Cloudflare Pages Function, Turnstile, D1 request logging, R2 attachment storage, file size/type limits, and email notification.
+3. Finish live Cloudflare backend setup: create/bind D1, create/bind R2, optionally add Turnstile, and apply the included D1 migration.
 4. Finish legal/privacy pages: Impressum details, privacy wording for contact forms/uploads, and analytics/cookie decision.
 5. Add production checks: final SEO titles/descriptions, image alt text, sitemap/robots, form validation copy, and a manual mobile/desktop QA pass on the deployed Pages URL.
 6. Future AI generator: keep hidden for now, then add real auth/quota logic, OpenAI cost caps, D1 job tracking, R2 input/output storage, and a generation progress UI.
 
 Not wired yet:
 
-- The request form is still frontend-only; it does not send email, write to D1, or upload files to R2 yet.
-- Attachments are selectable in the browser only; there is no server-side storage or validation yet.
-- The public email address is still unset.
-- Legal/privacy content is placeholder-level and needs final real details before launch.
+- The request form now posts to `/api/request`, but live D1/R2 resources still need to be created and bound in Cloudflare before real requests can be accepted.
+- Attachments are validated and ready for R2 upload, but the live R2 bucket binding is not connected yet.
+- The public email address is now set to `metallbau.schimmel@gmail.com`.
+- Legal/privacy content is generic placeholder-level and needs final real details before launch.
 - Some service/project images are generated or provisional placeholders.
 - The hidden ideas generator is only a gated placeholder; there is no OpenAI, quota, database, or worker flow yet.
+
+## Current Backend/Menu Checklist
+
+Requested on 2026-06-29, backend/menu pass:
+
+- [x] Change the three-bar extra-pages menu from a flat list into a nested accordion menu.
+- [x] Hide service/project/legal child pages until the parent row is expanded.
+- [x] Add the new public email address `metallbau.schimmel@gmail.com` to the site.
+- [x] Add generic legal/privacy copy without inventing a full address.
+- [x] Add a Cloudflare Pages Function endpoint at `/api/request`.
+- [x] Add a Cloudflare health endpoint at `/api/health`.
+- [x] Add D1 schema migration for contact requests, attachments, and interaction events.
+- [x] Add R2 upload handling in the request function.
+- [x] Add Turnstile server-side validation support when `TURNSTILE_SECRET_KEY` is configured.
+- [x] Add a content handoff format for final project/service images and text.
+- [ ] Create live Cloudflare D1/R2 resources and bind them to Pages. Blocked because Wrangler authentication/account lookup is not currently working on this machine.
 
 ## Questions For You
 
