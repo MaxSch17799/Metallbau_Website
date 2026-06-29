@@ -3377,7 +3377,7 @@ main {
   position: absolute;
   inset: 0;
   z-index: 2;
-  background: url("/generated/cad-railing-placeholder.webp") 35% 55% / min(1400px, 88vw) auto no-repeat;
+  background: url("/generated/cad-railing-placeholder.webp") clamp(-220px, -8vw, -120px) 55% / min(1340px, 86vw) auto no-repeat;
   content: "";
   mix-blend-mode: multiply;
   opacity: 0.26;
