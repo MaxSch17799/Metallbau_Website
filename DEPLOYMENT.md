@@ -62,3 +62,9 @@ Local verification already passed with `wrangler pages dev`:
 - `/api/health` sees D1 and R2 bindings.
 - A no-file test request returns `201 Created`.
 - A one-file test request returns `201 Created`.
+
+Live verification on `https://metallbau-schimmel.pages.dev` also passed:
+
+- `/api/health` sees D1 and R2 bindings.
+- A no-file test request returned `201 Created`; the test row was deleted.
+- A one-file test request returned `201 Created`; the test D1 rows and test R2 object were deleted.

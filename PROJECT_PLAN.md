@@ -706,6 +706,9 @@ Requested on 2026-06-29, backend/menu pass:
 - [x] Apply the D1 migration locally for development testing.
 - [x] Verify local Pages Functions see D1/R2 bindings.
 - [x] Verify local no-file and one-file request submissions return `201 Created`.
+- [x] Verify live Pages Functions see D1/R2 bindings.
+- [x] Verify live no-file and one-file request submissions return `201 Created`.
+- [x] Delete remote test D1 rows and test R2 object after verification.
 - [ ] Add Turnstile widget and secret once the public widget is created in Cloudflare.
 - [ ] Add email notification delivery for new requests.
 
