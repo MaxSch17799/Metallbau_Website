@@ -89,7 +89,7 @@ export function App() {
         const element = document.getElementById(id);
         if (!element) continue;
         const rect = element.getBoundingClientRect();
-        if (rect.top <= anchor && rect.bottom > anchor) {
+        if (rect.top <= anchor) {
           current = id;
         }
       }
@@ -159,6 +159,32 @@ function Header({
     { section: "ueber-mich-home", label: t.nav.about, subPath: routes.about },
     { section: "kontakt-home", label: t.nav.contact, subPath: routes.request },
   ] as const;
+  const subpageGroups = [
+    {
+      title: lang === "de" ? "Seiten" : "Pages",
+      links: [
+        { label: t.nav.projects as string, path: routes.projects },
+        { label: t.nav.request as string, path: routes.request },
+        { label: t.nav.about as string, path: routes.about },
+        { label: t.ideas.teaser as string, path: routes.ideas },
+      ],
+    },
+    {
+      title: t.nav.services as string,
+      links: serviceShowcases.map((item) => ({ label: item.title[lang], path: servicePath(item.slug) })),
+    },
+    {
+      title: t.nav.projects as string,
+      links: projects.map((item) => ({ label: item.title[lang], path: projectPath(item.slug) })),
+    },
+    {
+      title: lang === "de" ? "Rechtliches" : "Legal",
+      links: [
+        { label: t.legal.title as string, path: routes.legal },
+        { label: t.privacy.title as string, path: routes.privacy },
+      ],
+    },
+  ];
 
   const onNav = (path: string, targetId?: string) => {
     navigate(path, targetId);
@@ -222,7 +248,7 @@ function Header({
             {t.nav.request}
             <ArrowRight size={16} />
           </button>
-          <button className="icon-btn mobile-menu" onClick={() => setOpen((value) => !value)} aria-label="Menu">
+          <button className="icon-btn subpage-menu-toggle" onClick={() => setOpen((value) => !value)} aria-expanded={open} aria-label={lang === "de" ? "Unterseiten öffnen" : "Open subpages"}>
             {open ? <X size={22} /> : <Menu size={22} />}
           </button>
         </div>
@@ -235,12 +261,19 @@ function Header({
         ))}
       </nav>
       {open && (
-        <nav className="mobile-nav" aria-label="Mobile navigation">
-          {nav.map((item) => (
-            <button key={`${item.section}-${item.label}`} onClick={() => onSectionNav(item)}>
-              {item.label}
-              <ChevronRight size={18} />
-            </button>
+        <nav className="subpage-menu-panel" aria-label={lang === "de" ? "Unterseiten" : "Subpages"}>
+          {subpageGroups.map((group) => (
+            <section key={group.title}>
+              <span>{group.title}</span>
+              <div>
+                {group.links.map((link) => (
+                  <button key={link.path} onClick={() => onNav(link.path)}>
+                    {link.label}
+                    <ChevronRight size={16} />
+                  </button>
+                ))}
+              </div>
+            </section>
           ))}
         </nav>
       )}

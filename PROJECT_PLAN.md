@@ -1,13 +1,14 @@
 # Metallbau Website Planning
 
-Status: planning only. No website scaffold or page implementation has been created yet.
+Status: Vite/React website implemented and deployed; current work is visual, navigation, and interaction refinement.
 Created: 2026-06-28
-Updated: 2026-06-28
+Updated: 2026-06-29
 
 ## Current Repo State
 
 - Git has been initialized in this folder with `main` as the default branch.
 - The current folder contains:
+  - React/Vite website source under `src/`, website assets under `public/`, and generated production output under `dist/` after builds.
   - `Metal work.zip`, about 340 MB.
   - `Metallbau_images _fixed/`, 60 files.
   - `Metallbau_images _broken/`, 60 files.
@@ -74,7 +75,7 @@ Official docs checked for planning:
 
 - Owner/name: Maximilian Schimmel.
 - Registered Gewerbe currently: `Maximilian Schimmel`.
-- Public business name: undecided.
+- Public business name: `Metallbau Schimmel`.
 - Location: based in Seeheim, Germany.
 - Service area:
   - Local/on-site projects around Seeheim and the wider region.
@@ -650,6 +651,39 @@ Requested on 2026-06-29:
 - [x] Add a compact mobile section-button row in the top banner with active highlight.
 - [x] Fix the dark green mobile background issue in the repeated services/overview area.
 - [x] Make mobile `Ablauf` a 2x2 grid with directional arrows showing the order.
+
+## Current Navigation/Menu Refinement Checklist
+
+Requested on 2026-06-29, later pass:
+
+- [x] Make the mobile section button row sleeker and more legible.
+- [x] Keep the active section highlight on until the next section starts, instead of only while the scroll anchor is inside the section block.
+- [x] Change the hamburger menu from homepage-section links to subpage links.
+- [x] Add the same subpage dropdown menu to desktop.
+- [x] Include all current subpages in the dropdown: projects, request, profile/about, ideas generator, legal, privacy, service detail pages, and project detail pages.
+- [x] Restyle the dropdown menu so it feels lighter and less clunky on mobile and desktop.
+- [x] Fix the mobile 2x2 `Ablauf` arrow sequence so the visual order is 1 -> 2 -> 3 -> 4.
+- [x] Summarize the remaining unwired items and next implementation order.
+
+## Concise Remaining Todo
+
+Recommended next order:
+
+1. Finalize public identity details: free Gmail address, final legal owner/imprint wording, whether WhatsApp should be advertised, and any missing service-area wording.
+2. Replace placeholders with final approved assets: logo/wordmark if wanted, portrait, CAD/embedded examples, welding/detail shots, and final project gallery photos.
+3. Wire the request form backend: Cloudflare Pages Function, Turnstile, D1 request logging, R2 attachment storage, file size/type limits, and email notification.
+4. Finish legal/privacy pages: Impressum details, privacy wording for contact forms/uploads, and analytics/cookie decision.
+5. Add production checks: final SEO titles/descriptions, image alt text, sitemap/robots, form validation copy, and a manual mobile/desktop QA pass on the deployed Pages URL.
+6. Future AI generator: keep hidden for now, then add real auth/quota logic, OpenAI cost caps, D1 job tracking, R2 input/output storage, and a generation progress UI.
+
+Not wired yet:
+
+- The request form is still frontend-only; it does not send email, write to D1, or upload files to R2 yet.
+- Attachments are selectable in the browser only; there is no server-side storage or validation yet.
+- The public email address is still unset.
+- Legal/privacy content is placeholder-level and needs final real details before launch.
+- Some service/project images are generated or provisional placeholders.
+- The hidden ideas generator is only a gated placeholder; there is no OpenAI, quota, database, or worker flow yet.
 
 ## Questions For You
 
