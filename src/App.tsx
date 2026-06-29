@@ -21,6 +21,24 @@ import { brand, copy, Lang, missingImageSlots, projects, routes, services, servi
 
 type PageKey = "home" | "projects" | "serviceDetail" | "projectDetail" | "request" | "about" | "ideas" | "legal" | "privacy";
 type HomeSection = "leistungen" | "projekte-home" | "ueber-mich-home" | "kontakt-home";
+type TurnstileApi = {
+  render: (
+    container: HTMLElement,
+    options: {
+      sitekey: string;
+      callback: (token: string) => void;
+      "expired-callback": () => void;
+      "error-callback": () => void;
+    },
+  ) => string;
+  reset: (widgetId?: string) => void;
+};
+
+declare global {
+  interface Window {
+    turnstile?: TurnstileApi;
+  }
+}
 
 const homeSectionIds: HomeSection[] = ["leistungen", "projekte-home", "ueber-mich-home", "kontakt-home"];
 
@@ -917,8 +935,62 @@ function RequestPage({ lang }: { lang: Lang }) {
   const [status, setStatus] = useState<RequestStatus>("idle");
   const [message, setMessage] = useState("");
   const [consent, setConsent] = useState(false);
+  const [turnstileSiteKey, setTurnstileSiteKey] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState("");
+  const turnstileRef = useRef<HTMLDivElement | null>(null);
+  const turnstileWidgetRef = useRef<string>("");
 
   const fileSummary = useMemo(() => files.map((file) => `${file.name} (${Math.round(file.size / 1024)} KB)`), [files]);
+  const resetTurnstile = () => {
+    if (turnstileWidgetRef.current && window.turnstile?.reset) {
+      window.turnstile.reset(turnstileWidgetRef.current);
+    }
+    setTurnstileToken("");
+  };
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/config")
+      .then((response) => (response.ok ? response.json() : null))
+      .then((config) => {
+        if (!cancelled && config?.turnstileSiteKey) {
+          setTurnstileSiteKey(config.turnstileSiteKey);
+        }
+      })
+      .catch(() => undefined);
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!turnstileSiteKey || !turnstileRef.current || turnstileWidgetRef.current) return;
+
+    const renderTurnstile = () => {
+      if (!window.turnstile || !turnstileRef.current || turnstileWidgetRef.current) return;
+      turnstileWidgetRef.current = window.turnstile.render(turnstileRef.current, {
+        sitekey: turnstileSiteKey,
+        callback: setTurnstileToken,
+        "expired-callback": () => setTurnstileToken(""),
+        "error-callback": () => setTurnstileToken(""),
+      });
+    };
+
+    const existingScript = document.getElementById("turnstile-script");
+    if (existingScript) {
+      renderTurnstile();
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.id = "turnstile-script";
+    script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+    script.async = true;
+    script.defer = true;
+    script.addEventListener("load", renderTurnstile);
+    document.head.appendChild(script);
+  }, [turnstileSiteKey]);
 
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -934,6 +1006,9 @@ function RequestPage({ lang }: { lang: Lang }) {
     const form = new FormData(formElement);
     form.set("sourceLanguage", lang);
     form.set("fileSummary", JSON.stringify(fileSummary));
+    if (turnstileSiteKey) {
+      form.set("cf-turnstile-response", turnstileToken);
+    }
 
     setStatus("submitting");
     try {
@@ -965,9 +1040,11 @@ function RequestPage({ lang }: { lang: Lang }) {
       setFiles([]);
       setConsent(false);
       formElement.reset();
+      resetTurnstile();
     } catch (error) {
       setStatus("error");
       setMessage(error instanceof Error ? error.message : t.form.error);
+      resetTurnstile();
     }
   };
 
@@ -1052,7 +1129,12 @@ function RequestPage({ lang }: { lang: Lang }) {
           <input checked={consent} name="consent" onChange={(event) => setConsent(event.currentTarget.checked)} required type="checkbox" />
           <span>{t.form.consent}</span>
         </label>
-        <button className="primary-btn" disabled={!consent || status === "submitting"} type="submit">
+        {turnstileSiteKey && (
+          <div className="turnstile-field">
+            <div ref={turnstileRef} />
+          </div>
+        )}
+        <button className="primary-btn" disabled={!consent || status === "submitting" || Boolean(turnstileSiteKey && !turnstileToken)} type="submit">
           {status === "submitting" ? t.form.sending : t.form.submit}
           <Send size={18} />
         </button>

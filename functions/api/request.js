@@ -56,6 +56,55 @@ const verifyTurnstile = async ({ token, env, request }) => {
   return result?.success ? { ok: true, skipped: false } : { ok: false, message: "Turnstile check failed." };
 };
 
+const sendNotification = async ({ env, requestId, createdAt, fields, attachments }) => {
+  if (!env.NOTIFICATION_WEBHOOK_URL) return { ok: true, skipped: true };
+
+  const payload = {
+    secret: env.NOTIFICATION_WEBHOOK_SECRET || "",
+    request: {
+      id: requestId,
+      createdAt,
+      name: fields.name,
+      email: fields.email,
+      phone: fields.phone,
+      location: fields.location,
+      projectType: fields.projectType,
+      message: fields.message,
+      sourceLanguage: fields.sourceLanguage,
+    },
+    attachments: attachments.map((attachment) => ({
+      fileName: attachment.fileName,
+      contentType: attachment.contentType,
+      sizeBytes: attachment.sizeBytes,
+      r2Key: attachment.r2Key,
+    })),
+  };
+
+  try {
+    const response = await fetch(env.NOTIFICATION_WEBHOOK_URL, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json; charset=utf-8",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    return {
+      ok: response.ok,
+      skipped: false,
+      status: response.status,
+      message: response.ok ? "Notification webhook accepted request." : await response.text().catch(() => ""),
+    };
+  } catch (error) {
+    return {
+      ok: false,
+      skipped: false,
+      status: 0,
+      message: error instanceof Error ? error.message : "Notification webhook failed.",
+    };
+  }
+};
+
 export const onRequestOptions = () => json({ ok: true });
 
 export const onRequestPost = async ({ request, env }) => {
@@ -176,11 +225,30 @@ export const onRequestPost = async ({ request, env }) => {
 
   await env.REQUESTS_DB.batch(statements);
 
+  const notification = await sendNotification({ env, requestId, createdAt, fields, attachments });
+  await env.REQUESTS_DB.prepare(
+    `INSERT INTO interaction_events (id, created_at, event_type, request_id, metadata_json)
+     VALUES (?, ?, ?, ?, ?)`,
+  )
+    .bind(
+      crypto.randomUUID(),
+      new Date().toISOString(),
+      notification.skipped ? "notification_skipped" : notification.ok ? "notification_sent" : "notification_failed",
+      requestId,
+      JSON.stringify({
+        status: notification.status ?? null,
+        message: notification.message ?? "",
+      }),
+    )
+    .run()
+    .catch(() => undefined);
+
   return json(
     {
       ok: true,
       requestId,
       attachmentCount: attachments.length,
+      notificationSent: notification.ok && !notification.skipped,
       contactEmail: env.PUBLIC_CONTACT_EMAIL || "metallbau.schimmel@gmail.com",
     },
     201,

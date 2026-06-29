@@ -669,19 +669,19 @@ Requested on 2026-06-29, later pass:
 
 Recommended next order:
 
-1. Finalize public identity/legal details: final Impressum address, tax/VAT wording, whether WhatsApp should be advertised, and any missing service-area wording.
+1. Finalize public identity/legal details: final Impressum address decision, tax/VAT wording if later needed, and any missing service-area wording.
 2. Replace placeholders with final approved assets: logo/wordmark if wanted, portrait, CAD/embedded examples, welding/detail shots, and final project gallery photos.
-3. Finish live Cloudflare backend setup: create/bind D1, create/bind R2, optionally add Turnstile, and apply the included D1 migration.
-4. Finish legal/privacy pages: Impressum details, privacy wording for contact forms/uploads, and analytics/cookie decision.
+3. Activate Turnstile: create the widget, set the public site key, and set the secret.
+4. Activate email notifications: deploy the included Google Apps Script webhook and set the Cloudflare webhook URL/secret.
 5. Add production checks: final SEO titles/descriptions, image alt text, sitemap/robots, form validation copy, and a manual mobile/desktop QA pass on the deployed Pages URL.
 6. Future AI generator: keep hidden for now, then add real auth/quota logic, OpenAI cost caps, D1 job tracking, R2 input/output storage, and a generation progress UI.
 
 Not wired yet:
 
-- The request form now posts to `/api/request`, but live D1/R2 resources still need to be created and bound in Cloudflare before real requests can be accepted.
-- Attachments are validated and ready for R2 upload, but the live R2 bucket binding is not connected yet.
+- The request form posts to `/api/request`, and live D1/R2 request storage is connected and verified.
+- Attachments are validated and stored in R2 when submitted.
 - The public email address is now set to `metallbau.schimmel@gmail.com`.
-- Legal/privacy content is generic placeholder-level and needs final real details before launch.
+- Legal/privacy content is concise and live, but the omitted street address remains a legal risk.
 - Some service/project images are generated or provisional placeholders.
 - The hidden ideas generator is only a gated placeholder; there is no OpenAI, quota, database, or worker flow yet.
 
@@ -709,8 +709,12 @@ Requested on 2026-06-29, backend/menu pass:
 - [x] Verify live Pages Functions see D1/R2 bindings.
 - [x] Verify live no-file and one-file request submissions return `201 Created`.
 - [x] Delete remote test D1 rows and test R2 object after verification.
-- [ ] Add Turnstile widget and secret once the public widget is created in Cloudflare.
-- [ ] Add email notification delivery for new requests.
+- [x] Add frontend Turnstile widget rendering that activates when a site key is configured.
+- [x] Add runtime `/api/config` endpoint for public Turnstile configuration.
+- [x] Add email notification webhook support for new requests.
+- [x] Add Google Apps Script template for free Gmail notifications.
+- [ ] Create Turnstile widget and set `PUBLIC_TURNSTILE_SITE_KEY` / `TURNSTILE_SECRET_KEY`.
+- [ ] Deploy Google Apps Script notification webhook and set `NOTIFICATION_WEBHOOK_URL` / `NOTIFICATION_WEBHOOK_SECRET`.
 
 ## Questions For You
 
@@ -741,7 +745,7 @@ Questions already answered or partially answered:
 23. Public email: `metallbau.schimmel@gmail.com`.
 24. WhatsApp should be listed as a contact channel.
 25. Do not publish the current business tax/VAT details yet.
-26. Impressum address is still unresolved; "address on request" is probably not sufficient for a normal German business website.
+26. Impressum address is still unresolved; "address on request" is probably not sufficient for a normal German business website. Current public copy intentionally does not show a street address, but this remains a legal risk.
 
 Please answer these next:
 

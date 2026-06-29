@@ -106,12 +106,12 @@ export const copy = {
     legal: {
       title: "Impressum",
       text:
-        "Angaben nach § 5 DDG: Metallbau Schimmel, Maximilian Schimmel, Sitz in Seeheim-Jugenheim. Kontakt: +49 176 98472569, metallbau.schimmel@gmail.com. Hinweis: Eine vollständige ladungsfähige Anschrift, Umsatzsteuerangaben und weitere Pflichtangaben werden vor dem öffentlichen Launch final ergänzt.",
+        "Angaben nach § 5 DDG: Metallbau Schimmel, Maximilian Schimmel, Seeheim-Jugenheim, Deutschland. Kontakt: +49 176 98472569, metallbau.schimmel@gmail.com. Verantwortlich für Inhalte nach § 18 Abs. 2 MStV: Maximilian Schimmel. Zur Teilnahme an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle bin ich nicht verpflichtet und nicht bereit.",
     },
     privacy: {
       title: "Datenschutz",
       text:
-        "Diese Website verarbeitet Kontaktdaten, Projektbeschreibungen und hochgeladene Dateien nur zur Bearbeitung Ihrer Anfrage. Kontaktanfragen sollen in Cloudflare D1 gespeichert werden; Dateianhänge sollen in Cloudflare R2 gespeichert werden. Die Daten werden nicht verkauft und nicht für Werbung weitergegeben. Die finale Datenschutzerklärung muss vor dem Launch noch mit den tatsächlichen Impressumsdaten, Speicherfristen, Rechtsgrundlagen und Dienstleistern abgeglichen werden.",
+        "Verantwortlich für die Datenverarbeitung ist Maximilian Schimmel, Metallbau Schimmel, Seeheim-Jugenheim, Deutschland. Bei einer Anfrage werden die von Ihnen eingegebenen Kontaktdaten, Projektangaben und hochgeladenen Dateien verarbeitet, um Ihre Anfrage zu beantworten und das Projekt einschätzen zu können. Die Verarbeitung erfolgt zur Durchführung vorvertraglicher Maßnahmen und zur Wahrung berechtigter Interessen an einer direkten Kundenkommunikation. Kontaktanfragen werden über Cloudflare Pages verarbeitet, in Cloudflare D1 gespeichert und Dateianhänge in Cloudflare R2 abgelegt. Zur Benachrichtigung kann eine E-Mail an metallbau.schimmel@gmail.com ausgelöst werden. Zum Schutz vor Missbrauch kann Cloudflare Turnstile eingesetzt werden. Die Daten werden nicht verkauft und nicht für Werbung weitergegeben. Sie können Auskunft, Berichtigung, Löschung oder Einschränkung der Verarbeitung verlangen, soweit keine gesetzlichen Aufbewahrungspflichten entgegenstehen.",
     },
   },
   en: {
@@ -185,12 +185,12 @@ export const copy = {
     legal: {
       title: "Legal notice",
       text:
-        "Legal notice under German law: Metallbau Schimmel, Maximilian Schimmel, based in Seeheim-Jugenheim. Contact: +49 176 98472569, metallbau.schimmel@gmail.com. Note: the full serviceable address, VAT/tax details and any further mandatory details still need to be finalized before public launch.",
+        "Legal notice under German law: Metallbau Schimmel, Maximilian Schimmel, Seeheim-Jugenheim, Germany. Contact: +49 176 98472569, metallbau.schimmel@gmail.com. Responsible for editorial content under German media law: Maximilian Schimmel. I am not obliged or willing to participate in dispute resolution proceedings before a consumer arbitration board.",
     },
     privacy: {
       title: "Privacy",
       text:
-        "This website processes contact details, project descriptions and uploaded files only to handle your request. Contact requests are intended to be stored in Cloudflare D1; attachments are intended to be stored in Cloudflare R2. Data is not sold or shared for advertising. The final privacy policy still needs to be checked against the real legal details, retention periods, legal bases and processors before launch.",
+        "The controller for data processing is Maximilian Schimmel, Metallbau Schimmel, Seeheim-Jugenheim, Germany. If you send a request, the contact details, project information and uploaded files you provide are processed to answer the request and assess the project. Processing is used for pre-contractual communication and legitimate interests in direct customer communication. Requests are processed through Cloudflare Pages, stored in Cloudflare D1 and attachments are stored in Cloudflare R2. An email notification may be sent to metallbau.schimmel@gmail.com. Cloudflare Turnstile may be used to protect the form from abuse. Data is not sold or shared for advertising. You may request access, correction, deletion or restriction of processing where no legal retention duties prevent this.",
     },
   },
 } satisfies Record<Lang, Record<string, unknown>>;

@@ -871,6 +871,12 @@ textarea {
   margin-top: 4px;
 }
 
+.turnstile-field {
+  min-height: 70px;
+  display: flex;
+  align-items: center;
+}
+
 .success-message {
   display: inline-flex;
   align-items: center;

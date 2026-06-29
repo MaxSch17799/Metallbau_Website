@@ -5,6 +5,7 @@
   "pages_build_output_dir": "dist",
   "vars": {
     "PUBLIC_CONTACT_EMAIL": "metallbau.schimmel@gmail.com",
+    "PUBLIC_TURNSTILE_SITE_KEY": "",
     "MAX_UPLOAD_FILES": "5",
     "MAX_UPLOAD_BYTES": "10485760"
   },

@@ -14,6 +14,8 @@ export const onRequestGet = ({ env }) =>
       requestsDb: Boolean(env.REQUESTS_DB),
       requestAttachments: Boolean(env.REQUEST_ATTACHMENTS),
       turnstileSecret: Boolean(env.TURNSTILE_SECRET_KEY),
+      turnstileSiteKey: Boolean(env.PUBLIC_TURNSTILE_SITE_KEY),
+      notificationWebhook: Boolean(env.NOTIFICATION_WEBHOOK_URL),
       publicContactEmail: env.PUBLIC_CONTACT_EMAIL || "metallbau.schimmel@gmail.com",
     },
   });
