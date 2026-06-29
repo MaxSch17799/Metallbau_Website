@@ -710,7 +710,7 @@ Requested on 2026-06-29, backend/menu pass:
 - [x] Verify live no-file and one-file request submissions return `201 Created`.
 - [x] Delete remote test D1 rows and test R2 object after verification.
 - [x] Add frontend Turnstile widget rendering that activates when a site key is configured.
-- [x] Add runtime `/api/config` endpoint for public Turnstile configuration.
+- [x] Add runtime `/api/site-config` endpoint for public Turnstile configuration.
 - [x] Add email notification webhook support for new requests.
 - [x] Add Google Apps Script template for free Gmail notifications.
 - [ ] Create Turnstile widget and set `PUBLIC_TURNSTILE_SITE_KEY` / `TURNSTILE_SECRET_KEY`.

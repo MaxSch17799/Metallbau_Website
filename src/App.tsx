@@ -950,7 +950,7 @@ function RequestPage({ lang }: { lang: Lang }) {
 
   useEffect(() => {
     let cancelled = false;
-    fetch("/api/config")
+    fetch("/api/site-config")
       .then((response) => (response.ok ? response.json() : null))
       .then((config) => {
         if (!cancelled && config?.turnstileSiteKey) {
