@@ -7,11 +7,18 @@
     "PUBLIC_CONTACT_EMAIL": "metallbau.schimmel@gmail.com",
     "MAX_UPLOAD_FILES": "5",
     "MAX_UPLOAD_BYTES": "10485760"
-  }
-
-  // Add real bindings after creating the resources in Cloudflare.
-  // Expected binding names used by functions/api/request.js:
-  // - D1 database binding: REQUESTS_DB
-  // - R2 bucket binding: REQUEST_ATTACHMENTS
-  // - Secret: TURNSTILE_SECRET_KEY
+  },
+  "d1_databases": [
+    {
+      "binding": "REQUESTS_DB",
+      "database_name": "metallbau_requests",
+      "database_id": "23332084-8f0d-4705-8771-379e3622b5c9"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "REQUEST_ATTACHMENTS",
+      "bucket_name": "metallbau-request-attachments"
+    }
+  ]
 }

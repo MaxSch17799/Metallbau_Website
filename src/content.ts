@@ -106,7 +106,7 @@ export const copy = {
     legal: {
       title: "Impressum",
       text:
-        "Angaben nach § 5 TMG: Metallbau Schimmel, Maximilian Schimmel, Sitz in Seeheim-Jugenheim. Kontakt: +49 176 98472569, metallbau.schimmel@gmail.com. Hinweis: Eine vollständige ladungsfähige Anschrift, Umsatzsteuerangaben und weitere Pflichtangaben werden vor dem öffentlichen Launch final ergänzt.",
+        "Angaben nach § 5 DDG: Metallbau Schimmel, Maximilian Schimmel, Sitz in Seeheim-Jugenheim. Kontakt: +49 176 98472569, metallbau.schimmel@gmail.com. Hinweis: Eine vollständige ladungsfähige Anschrift, Umsatzsteuerangaben und weitere Pflichtangaben werden vor dem öffentlichen Launch final ergänzt.",
     },
     privacy: {
       title: "Datenschutz",

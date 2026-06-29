@@ -28,20 +28,37 @@ Expected Cloudflare binding names:
 - R2 bucket binding: `REQUEST_ATTACHMENTS`
 - Optional Turnstile secret: `TURNSTILE_SECRET_KEY`
 
-Suggested resource names:
+Created Cloudflare resources:
 
 - D1 database: `metallbau_requests`
+- D1 database ID: `23332084-8f0d-4705-8771-379e3622b5c9`
+- D1 region: `WEUR`
 - R2 bucket: `metallbau-request-attachments`
+- Public contact email: `metallbau.schimmel@gmail.com`
 
-Useful Wrangler commands after Cloudflare login:
+Bindings are now configured in `wrangler.jsonc`:
+
+- `REQUESTS_DB` -> D1 `metallbau_requests`
+- `REQUEST_ATTACHMENTS` -> R2 `metallbau-request-attachments`
+
+Already run:
 
 ```powershell
 npx wrangler d1 create metallbau_requests
 npx wrangler d1 execute metallbau_requests --remote --file=migrations/0001_contact_requests.sql
 npx wrangler r2 bucket create metallbau-request-attachments
+```
+
+Still optional:
+
+```powershell
 npx wrangler pages secret put TURNSTILE_SECRET_KEY --project-name metallbau-schimmel
 ```
 
-After creating the resources, add the D1 and R2 bindings to the Cloudflare Pages project settings or add the real IDs to `wrangler.jsonc`. Do not add placeholder IDs.
+Only add the Turnstile secret after creating a Turnstile widget in Cloudflare and adding the matching site key to the frontend.
 
-The request endpoint intentionally returns `backend_not_configured` until D1 is bound, so real visitor messages are not silently dropped. Attachment uploads require the R2 binding if files are attached.
+Local verification already passed with `wrangler pages dev`:
+
+- `/api/health` sees D1 and R2 bindings.
+- A no-file test request returns `201 Created`.
+- A one-file test request returns `201 Created`.

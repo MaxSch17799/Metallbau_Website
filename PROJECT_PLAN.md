@@ -699,7 +699,15 @@ Requested on 2026-06-29, backend/menu pass:
 - [x] Add R2 upload handling in the request function.
 - [x] Add Turnstile server-side validation support when `TURNSTILE_SECRET_KEY` is configured.
 - [x] Add a content handoff format for final project/service images and text.
-- [ ] Create live Cloudflare D1/R2 resources and bind them to Pages. Blocked because Wrangler authentication/account lookup is not currently working on this machine.
+- [x] Create live Cloudflare D1 database `metallbau_requests`.
+- [x] Create live Cloudflare R2 bucket `metallbau-request-attachments`.
+- [x] Add D1/R2 bindings to `wrangler.jsonc`.
+- [x] Apply the D1 migration remotely.
+- [x] Apply the D1 migration locally for development testing.
+- [x] Verify local Pages Functions see D1/R2 bindings.
+- [x] Verify local no-file and one-file request submissions return `201 Created`.
+- [ ] Add Turnstile widget and secret once the public widget is created in Cloudflare.
+- [ ] Add email notification delivery for new requests.
 
 ## Questions For You
 
@@ -727,6 +735,10 @@ Questions already answered or partially answered:
 20. Contact form target: store in D1 and send email later.
 21. Lead image: keep the large house/balcony image.
 22. Visual direction: move closer to the attached reference layout with a clean large header, diagonal hero photo, service image strip, icon/service row, and request panel.
+23. Public email: `metallbau.schimmel@gmail.com`.
+24. WhatsApp should be listed as a contact channel.
+25. Do not publish the current business tax/VAT details yet.
+26. Impressum address is still unresolved; "address on request" is probably not sufficient for a normal German business website.
 
 Please answer these next:
 
