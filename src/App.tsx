@@ -17,7 +17,7 @@ import {
   X,
 } from "lucide-react";
 import { FormEvent, MouseEvent as ReactMouseEvent, PointerEvent as ReactPointerEvent, useEffect, useMemo, useRef, useState } from "react";
-import { brand, copy, Lang, missingImageSlots, projects, proofPoints, routes, services, serviceShowcases } from "./content";
+import { brand, copy, Lang, missingImageSlots, projects, routes, services, serviceShowcases } from "./content";
 
 type PageKey = "home" | "projects" | "serviceDetail" | "projectDetail" | "request" | "about" | "ideas" | "legal" | "privacy";
 type HomeSection = "leistungen" | "projekte-home" | "ueber-mich-home" | "kontakt-home";
@@ -61,7 +61,7 @@ export function App() {
   });
   const [page, setPage] = useState<PageKey>(() => getPageFromPath(window.location.pathname));
   const [slug, setSlug] = useState(() => getSlugFromPath(window.location.pathname));
-  const [activeSection, setActiveSection] = useState<HomeSection>("leistungen");
+  const [activeSection, setActiveSection] = useState<HomeSection | null>(null);
   const t = copy[lang];
 
   useEffect(() => {
@@ -82,14 +82,14 @@ export function App() {
     if (page !== "home") return;
 
     const updateActiveSection = () => {
-      let current = homeSectionIds[0];
+      let current: HomeSection | null = null;
       const anchor = window.innerHeight * 0.38;
 
       for (const id of homeSectionIds) {
         const element = document.getElementById(id);
         if (!element) continue;
         const rect = element.getBoundingClientRect();
-        if (rect.top <= anchor && rect.bottom > 120) {
+        if (rect.top <= anchor && rect.bottom > anchor) {
           current = id;
         }
       }
@@ -149,7 +149,7 @@ function Header({
   setLang: (lang: Lang) => void;
   navigate: (path: string, targetId?: string) => void;
   page: PageKey;
-  activeSection: HomeSection;
+  activeSection: HomeSection | null;
 }) {
   const [open, setOpen] = useState(false);
   const t = copy[lang];
@@ -259,9 +259,7 @@ function HomePage({ lang, navigate }: { lang: Lang; navigate: (path: string, tar
           <h1>
             {lang === "de" ? (
               <>
-                <span>
-                  Sonder<wbr />anfertigungen
-                </span>
+                <span>Sonderanfertigungen</span>
                 <span>aus Metall und Holz.</span>
               </>
             ) : (
@@ -286,10 +284,10 @@ function HomePage({ lang, navigate }: { lang: Lang; navigate: (path: string, tar
           <div className="hero-media">
             <img src="/projects/balkon-gelaender.webp" alt="" />
           </div>
-          <div className="hero-badge">
+          <button className="hero-badge" onClick={() => navigate(routes.about)}>
             <strong>{lang === "de" ? "Handwerk aus Seeheim" : "Craft from Seeheim"}</strong>
-            <span>{lang === "de" ? "persönlich" : "personal"}</span>
-          </div>
+            <span>{lang === "de" ? "Seit 2012" : "Since 2012"}</span>
+          </button>
         </div>
       </section>
 
@@ -304,27 +302,11 @@ function HomePage({ lang, navigate }: { lang: Lang; navigate: (path: string, tar
           variant="services"
         />
         <div className="showcase-actions">
-          <button className="outline-btn" onClick={() => navigate(servicePath("cad-planung"))}>
-            {lang === "de" ? "Mehr zu Planung & CAD" : "More about planning & CAD"}
-            <ArrowRight size={16} />
-          </button>
           <button className="text-btn" onClick={() => navigate(routes.request)}>
             {t.hero.primary}
             <ArrowRight size={16} />
           </button>
         </div>
-      </section>
-
-      <section className="proof-strip" aria-label="Highlights">
-        {proofPoints.map((item) => {
-          const Icon = item.icon;
-          return (
-            <div key={item.de}>
-              <Icon size={18} />
-              <span>{item[lang]}</span>
-            </div>
-          );
-        })}
       </section>
 
       <section className="section-band capabilities-band">
@@ -420,15 +402,17 @@ function SmoothScroller<T extends SmoothItem>({
 }) {
   const trackRef = useRef<HTMLDivElement>(null);
   const baseSpeed = variant === "services" ? 34 : 28;
-  const boostSpeed = variant === "services" ? 104 : 88;
+  const boostSpeed = variant === "services" ? 158 : 132;
   const baseDirection = useRef(1);
   const targetVelocity = useRef(baseSpeed);
   const currentVelocity = useRef(baseSpeed);
   const position = useRef(0);
   const frame = useRef<number | null>(null);
   const lastTime = useRef<number | null>(null);
-  const dragState = useRef<{ pointerId: number; startX: number; startPosition: number; dragging: boolean } | null>(null);
+  const dragState = useRef<{ pointerId: number; pointerType: string; startX: number; startPosition: number; lastX: number; lastTime: number; velocity: number; dragging: boolean } | null>(null);
   const suppressClick = useRef(false);
+  const trackHovering = useRef(false);
+  const controlHoverDirection = useRef<number | null>(null);
   const [dragging, setDragging] = useState(false);
   const repeated = useMemo(() => [...items, ...items, ...items], [items]);
 
@@ -448,20 +432,42 @@ function SmoothScroller<T extends SmoothItem>({
     targetVelocity.current = direction * speed;
   };
 
-  const resume = () => {
+  const syncTarget = () => {
+    if (controlHoverDirection.current !== null) {
+      setTarget(controlHoverDirection.current, boostSpeed);
+      return;
+    }
+    if (trackHovering.current) {
+      targetVelocity.current = 0;
+      return;
+    }
     setTarget(baseDirection.current, baseSpeed);
   };
 
   const pause = () => {
+    trackHovering.current = true;
     targetVelocity.current = 0;
   };
 
+  const resume = () => {
+    trackHovering.current = false;
+    syncTarget();
+  };
+
   const boost = (direction: number) => {
+    controlHoverDirection.current = direction;
     setTarget(direction, boostSpeed);
+  };
+
+  const releaseBoost = () => {
+    controlHoverDirection.current = null;
+    syncTarget();
   };
 
   const chooseDirection = (direction: number) => {
     baseDirection.current = direction;
+    controlHoverDirection.current = null;
+    trackHovering.current = false;
     setTarget(direction, baseSpeed);
   };
 
@@ -478,7 +484,7 @@ function SmoothScroller<T extends SmoothItem>({
 
       const loopWidth = track.scrollWidth / 3;
       if (!dragState.current?.dragging) {
-        currentVelocity.current += (targetVelocity.current - currentVelocity.current) * 0.07;
+        currentVelocity.current += (targetVelocity.current - currentVelocity.current) * 0.058;
         position.current -= currentVelocity.current * delta;
       }
 
@@ -495,14 +501,18 @@ function SmoothScroller<T extends SmoothItem>({
 
   const onViewportPointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
     if (event.pointerType === "mouse" && event.button !== 0) return;
+    const now = performance.now();
     dragState.current = {
       pointerId: event.pointerId,
+      pointerType: event.pointerType,
       startX: event.clientX,
       startPosition: position.current,
+      lastX: event.clientX,
+      lastTime: now,
+      velocity: 0,
       dragging: false,
     };
     pause();
-    event.currentTarget.setPointerCapture(event.pointerId);
   };
 
   const onViewportPointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
@@ -514,12 +524,20 @@ function SmoothScroller<T extends SmoothItem>({
       state.dragging = true;
       suppressClick.current = true;
       setDragging(true);
+      event.currentTarget.setPointerCapture(event.pointerId);
     }
 
     if (!state.dragging) return;
 
     const track = trackRef.current;
     if (!track) return;
+
+    const now = performance.now();
+    const elapsed = Math.max(now - state.lastTime, 12);
+    const instantVelocity = ((event.clientX - state.lastX) / elapsed) * 1000;
+    state.velocity = state.velocity * 0.35 + instantVelocity * 0.65;
+    state.lastX = event.clientX;
+    state.lastTime = now;
 
     currentVelocity.current = 0;
     targetVelocity.current = 0;
@@ -538,12 +556,19 @@ function SmoothScroller<T extends SmoothItem>({
 
     dragState.current = null;
     setDragging(false);
-    resume();
 
     if (state.dragging) {
+      const momentum = Math.max(-430, Math.min(430, -state.velocity));
+      currentVelocity.current = momentum;
+      if (state.pointerType !== "mouse") {
+        trackHovering.current = false;
+      }
+      syncTarget();
       window.setTimeout(() => {
         suppressClick.current = false;
-      }, 0);
+      }, 90);
+    } else {
+      resume();
     }
   };
 
@@ -567,10 +592,10 @@ function SmoothScroller<T extends SmoothItem>({
         className="scroller-control scroller-control-left"
         aria-label={directionLabel(-1)}
         onClick={() => chooseDirection(-1)}
-        onPointerCancel={resume}
+        onPointerCancel={releaseBoost}
         onPointerDown={() => boost(-1)}
         onPointerEnter={() => boost(-1)}
-        onPointerLeave={resume}
+        onPointerLeave={releaseBoost}
         onPointerUp={() => chooseDirection(-1)}
         type="button"
       >
@@ -602,10 +627,10 @@ function SmoothScroller<T extends SmoothItem>({
         className="scroller-control scroller-control-right"
         aria-label={directionLabel(1)}
         onClick={() => chooseDirection(1)}
-        onPointerCancel={resume}
+        onPointerCancel={releaseBoost}
         onPointerDown={() => boost(1)}
         onPointerEnter={() => boost(1)}
-        onPointerLeave={resume}
+        onPointerLeave={releaseBoost}
         onPointerUp={() => chooseDirection(1)}
         type="button"
       >

@@ -3234,3 +3234,140 @@ main {
     font-size: clamp(0.46rem, 1.9vw, 0.58rem);
   }
 }
+
+/* Refinement pass: stronger hero/nav, cleaner sections, faster interaction zones */
+.hero-badge {
+  border: 2px solid rgba(255, 255, 255, 0.82);
+  padding: 0;
+  cursor: pointer;
+  transition: transform 240ms ease, box-shadow 240ms ease, background 240ms ease;
+}
+
+.hero-badge:hover,
+.hero-badge:focus-visible {
+  background: rgba(82, 98, 66, 0.96);
+  box-shadow: 0 24px 58px rgba(21, 23, 21, 0.3);
+  transform: scale(1.08);
+}
+
+.hero-badge strong {
+  max-width: 128px;
+  font-size: 0.96rem;
+  line-height: 1.16;
+}
+
+.hero-badge span {
+  font-size: 0.82rem;
+  font-weight: 900;
+}
+
+.floating-request-panel,
+.floating-request-tab,
+.floating-request-panel.is-settled,
+.floating-request-tab.is-settled {
+  right: clamp(14px, 1.7vw, 32px);
+}
+
+.showcase-actions {
+  justify-content: flex-end;
+}
+
+.showcase-actions .text-btn {
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.72);
+  padding: 0 18px;
+}
+
+.eyebrow,
+.section-intro .eyebrow {
+  font-size: clamp(0.86rem, 0.85vw, 1rem);
+  font-weight: 900;
+}
+
+@media (min-width: 981px) {
+  .topline,
+  .nav-shell {
+    width: min(1800px, calc(100% - 96px));
+  }
+
+  .nav-shell {
+    gap: clamp(30px, 4vw, 84px);
+    padding-block: 18px;
+  }
+
+  .brand-lockup strong {
+    font-size: clamp(1.08rem, 1.2vw, 1.34rem);
+  }
+
+  .brand-lockup small {
+    font-size: clamp(0.82rem, 0.9vw, 0.96rem);
+  }
+
+  .desktop-nav {
+    flex: 1;
+    justify-content: center;
+    gap: clamp(34px, 4vw, 78px);
+  }
+
+  .desktop-nav button {
+    font-size: clamp(0.94rem, 0.9vw, 1.08rem);
+    padding-inline: 6px;
+  }
+
+  .nav-actions {
+    gap: 14px;
+  }
+
+  .section-intro {
+    max-width: 1040px;
+  }
+
+  .showcase-heading .section-intro,
+  .capabilities-band .section-intro {
+    max-width: 1080px;
+  }
+
+  .section-intro h2,
+  .capabilities-band .section-intro h2 {
+    max-width: 1080px;
+    font-size: clamp(2.15rem, 3.1vw, 3.05rem);
+    line-height: 1.05;
+  }
+
+  .hero-copy h1 {
+    max-width: 840px;
+  }
+
+  .hero-copy {
+    background:
+      linear-gradient(90deg, rgba(251, 250, 246, 0.93), rgba(251, 250, 246, 0.78) 51%, rgba(251, 250, 246, 0.36)),
+      url("/generated/cad-railing-placeholder.webp") 82% 54% / 122% auto no-repeat,
+      var(--paper);
+  }
+
+  .hero-stage::before {
+    left: -360px;
+    width: 660px;
+    background:
+      linear-gradient(90deg, rgba(251, 250, 246, 0.26), rgba(251, 250, 246, 0)),
+      url("/generated/cad-railing-placeholder.webp") 50% 56% / 780px auto no-repeat;
+    opacity: 0.78;
+  }
+}
+
+@media (max-width: 760px) {
+  .floating-request-panel,
+  .floating-request-tab,
+  .floating-request-panel.is-settled,
+  .floating-request-tab.is-settled {
+    right: 12px;
+  }
+
+  .hero-copy h1 {
+    overflow-wrap: anywhere;
+  }
+
+  .showcase-actions {
+    justify-content: stretch;
+  }
+}
